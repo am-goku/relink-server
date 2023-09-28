@@ -56,7 +56,7 @@ export const registerUser = (req, res) => {
     console.log(userData);
     registration(userData)
       .then((response) => {
-        res.status(200).send({ message: "registration successful", response });
+        res.status(response.status).json({...response})
       })
       .catch((err) => {
         console.log("error in registerUser", err);

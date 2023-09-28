@@ -64,11 +64,24 @@ export const registration = ({username,email,password})=>{
                 });
 
                 newUser.save().then((response)=>{
-                    console.log(response);
+                    resolve({
+                        status: 200,
+                        message: "Account created successfully",
+                    });
                 }).catch((error)=>{
+                    resolve({
+                      error_code: "DB_SAVE_ERROR",
+                      message: "omethings wrong try after sometimes",
+                      status: 500,
+                    });
                     console.log("error saving new user: " + error);
                 })
             }).catch((error)=>{
+                resolve({
+                    error_code: "PSW_HASHING_ERROR",
+                    message:"Somethings wrong try after sometimes",
+                    status:500
+                });
                 console.log("error hashing password: " + error);
             })
         });

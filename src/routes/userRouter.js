@@ -1,16 +1,22 @@
 import { Router } from "express";
-import { getUserdetails, login, registerUser } from "../controllers/userController.js";
+import {
+  getUserdetails,
+  login,
+  registerUser,
+} from "../controllers/userController.js";
 const router = Router();
 
 
 
 
-router.get('/userdetails', getUserdetails);
+//route to get the list of username and password as an array
+router.get("/userdetails", getUserdetails);
 
+//routes for the login
+router.post("/login", login);
 
-router.post('/login', login);
-
-router.post('/register', registerUser);
+//routes fot the registration process
+router.post("/register", registerUser);
 
 
 
