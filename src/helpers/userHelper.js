@@ -93,13 +93,18 @@ export const registration = ({username,email,password})=>{
 
 
 
-export const getUsers = () =>{
+export const getUsers = (query) =>{
     try {
         return new Promise((resolve, reject) => {
-            User.find().then((users) => {
-                users? resolve(users): resolve({err:true});
+            User.find(query).select("-password").then((users) => {
+                resolve({status:200, message: "User fetched successfully", users});
             }).catch((err) => {
-                resolve({err:true});
+                console.log("error fetching users", err);
+                resolve({
+                  status: 500,
+                  message: "Something went wrong",
+                  error_code: "DB_FETCH_ERROR",
+                });
             })
         })
     } catch (error) {

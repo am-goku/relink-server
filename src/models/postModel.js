@@ -13,7 +13,7 @@ const postSchema = new Schema({
     trim: true,
   },
 
-  decription: {
+  description: {
     type: String,
     trim: true,
     maxLength: 100,
@@ -31,31 +31,28 @@ const postSchema = new Schema({
         ref: "user",
       },
     ],
-    default: []
+    default: [],
   },
 
-  save: {
+  saved: {
     type: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "user"
-        }
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
     ],
-    default: []
+    default: [],
   },
 
   hidden: {
     type: Boolean,
-    default: false
+    default: false,
   },
 
   deleted: {
     type: Boolean,
-    default: false
-  }
-
-
-
+    default: false,
+  },
 });
 
 

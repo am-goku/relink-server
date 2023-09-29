@@ -1,8 +1,18 @@
 import { Router } from "express";
-
 const router = Router();
 
 
+import { createNewPost, fetchAllPosts } from "../controllers/postController";
+import auth from "../middleware/authMiddleware";
+
+
+
+
+//to create a new post
+router.post('/create-post', createNewPost);
+
+//to get the list of posts in server
+router.get('/fetch-posts', fetchAllPosts);
 
 
 
@@ -16,6 +26,4 @@ const router = Router();
 
 
 
-
-
-export default Router;
+export default router;
