@@ -3,7 +3,13 @@ import jwt from 'jsonwebtoken'
 const generateJwt = (data) =>{
     try {
         return new Promise((resolve,reject) => {
-            const options = {expiresIn: '1h'}, payload = {userId: data._id, username: data.username, email: data.email};
+            const options = {expiresIn: '1h'}, payload = {};
+            if(data._id){
+              payload.userId = data._id;
+            } else if (data.email){
+              payload.email = data.email;
+            }
+
             jwt
               .sign(payload, process.env.JWT_KEY_SECRET, options, (err, token)=>{
                   if (err) {

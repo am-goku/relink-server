@@ -73,3 +73,7 @@ export const getAllPosts = (query) => {
     console.log("Error in getting list of posts (in postHelper)", error);
   }
 };
+
+
+
+
