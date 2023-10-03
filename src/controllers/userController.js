@@ -42,7 +42,7 @@ export const getUserdetails = (req, res) => {
           usernames.push(user.username);
           emails.push(user.email);
         });
-        res.status(response.status).send({usernames, emails});
+        res.status(response.status).send({status: response.status, message: response.message, usernames, emails});
       })
       .catch((err) => {
         console.log("error in calling getUsers", err);

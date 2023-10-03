@@ -42,9 +42,9 @@ app.use(logger("dev")); //logger
 
 
 //settingup router paths
-app.use('/admin', adminRouter);
-app.use('/user', userRouter);
-app.use('/post', postRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/user", userRouter);
+app.use("/api/post", postRouter);
 
 
 const port = process.env.LISTENING_PORT;
