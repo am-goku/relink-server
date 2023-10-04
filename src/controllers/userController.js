@@ -13,12 +13,7 @@ export const login = (req, res, next) => {
   try {
     const userData = req.body;
     userLogin(userData).then((data) => {
-      if(data?.status === 200){
-        console.log(data);
-        res.status(200).json(data)
-      } else {
-        res.status(data.status).json(data);
-      }
+      res.status(200).json(data);
     }).catch((err) => {
       console.log("Error while getting userLogin", err);
     })
@@ -46,7 +41,7 @@ export const getUserdetails = (req, res) => {
       })
       .catch((err) => {
         console.log("error in calling getUsers", err);
-        response.status(500).json({status:500, message:"Sometings wrong", error_code: "INTERNAL_SERVER_ERROR"})
+        response.status(200).json({status:500, message:"Sometings wrong", error_code: "INTERNAL_SERVER_ERROR"})
       });
   } catch (error) {
     console.log("error in getUsername", error);
@@ -64,7 +59,7 @@ export const registerUser = (req, res) => {
     console.log(userData);
     registration(userData)
       .then((response) => {
-        res.status(response.status).json({...response})
+        res.status(200).json({...response})
       })
       .catch((err) => {
         console.log("error in registerUser", err);
@@ -87,9 +82,9 @@ export const fetchUsers = (req, res) => {
     }
 
     getUsers(query).then((response) => {
-      res.status(response.status).json({...response})
+      res.status(200).json({...response})
     }).catch((err) => {
-      res.status(500).json({status:500, message: 'Somethings wrong', error_code: "INTERNAL_SERVER_ERROR"});
+      res.status(200).json({status:500, message: 'Somethings wrong', error_code: "INTERNAL_SERVER_ERROR"});
     })
 
   } catch (error) {

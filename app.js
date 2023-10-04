@@ -12,6 +12,7 @@ import cloudinaryConfig from './src/services/cloudinary.js';
 import adminRouter from './src/routes/adminRouter.js';
 import userRouter from './src/routes/userRouter.js';
 import postRouter from './src/routes/postRouter.js';
+import authRouter from './src/routes/authRouter.js';
 
 
 
@@ -45,6 +46,7 @@ app.use(logger("dev")); //logger
 app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
+app.use("/api/auth", authRouter)
 
 
 const port = process.env.LISTENING_PORT;

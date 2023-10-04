@@ -8,12 +8,6 @@ import bcrypt from "bcrypt";
 
 
 
-
-
-
-
-
-
 export const adminLogin = (data) => {
   try {
     return new Promise(async (resolve, reject) => {

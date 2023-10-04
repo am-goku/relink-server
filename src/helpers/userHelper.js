@@ -22,6 +22,7 @@ export const userLogin = ({username, email, password}) => {
             User.findOne(query).then((user)=>{
                 if(user){
                     bcrypt.compare(password, user.password).then((result)=>{
+                        console.log(result);
                         if(result){
                             generateJwt(user).then((token)=>{
                                 resolve({status: 200, message: 'Login successful', token});
@@ -29,11 +30,10 @@ export const userLogin = ({username, email, password}) => {
                                 console.log("Error in generating token: " + error);
                             })
                         } else {
-                            throw new Error("wrong password")
+                            resolve({ status: 401, message: "Wrong password" });
                         }
                     }).catch((error)=>{
                         console.log("Error in comparing password", error);
-                        resolve({ status: 401, message: "Wrong password" });
                     })
                 } else {
                     throw new Error("user not found");
@@ -55,9 +55,11 @@ export const registration = ({username,email,password})=>{
     try {
         return new Promise(async (resolve, reject) => {
 
-            if(await User.findOne({email: email}) && await User.findOne({username: username})){
-                resolve({status: 409, error_code: "USER_ALREADY_REGISTERED", message: "User alredy existing"});
-            };
+            if(await User.findOne({email: email})){
+                resolve({status: 409, error_code: "USER_ALREADY_REGISTERED", message: "Email has already been registered"});
+            } if (await User.findOne({username: username})){
+                resolve({status: 409, error_code: "USERNAME_TAKEN", message: "Username already in use"});
+            }
 
             const name = email.split("@");
             bcrypt.hash(password, saltRounds).then((hashedPassword)=>{
