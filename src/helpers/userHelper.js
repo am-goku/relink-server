@@ -53,7 +53,12 @@ export const userLogin = ({username, email, password}) => {
 
 export const registration = ({username,email,password})=>{
     try {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
+
+            if(await User.findOne({email: email}) && await User.findOne({username: username})){
+                resolve({status: 409, error_code: "USER_ALREADY_REGISTERED", message: "User alredy existing"});
+            };
+
             const name = email.split("@");
             bcrypt.hash(password, saltRounds).then((hashedPassword)=>{
                 const newUser = new User({
