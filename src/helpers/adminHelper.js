@@ -7,7 +7,9 @@ import bcrypt from "bcrypt";
 
 
 
-
+// @desc    Login admin
+// @route   POST /admin/login
+// @access  Private
 export const adminLogin = (data) => {
   try {
     return new Promise(async (resolve, reject) => {

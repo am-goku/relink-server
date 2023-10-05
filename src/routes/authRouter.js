@@ -1,14 +1,15 @@
 import { Router } from "express";
 const router = Router();
 
-import auth from "../middleware/authMiddleware";
-import { authUser } from "../controllers/authController";
+import { authAdmin, authUser } from "../controllers/authController";
+import protectAdmin from "../middleware/adminAuth";
+import protect from "../middleware/authMiddleware";
 
 
 
-router.get('/user', auth,  authUser);
+router.get('/user', protect,  authUser);
 
-
+router.get('/admin', protectAdmin, authAdmin);
 
 
 

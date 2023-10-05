@@ -80,7 +80,6 @@ export const fetchUsers = (req, res) => {
     if(req.query.userId){
       query = {_id: req.query.userId}
     }
-
     getUsers(query).then((response) => {
       res.status(200).json({...response})
     }).catch((err) => {

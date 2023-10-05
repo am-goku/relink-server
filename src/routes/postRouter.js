@@ -3,13 +3,13 @@ const router = Router();
 
 
 import { createNewPost, fetchAllPosts } from "../controllers/postController";
-import auth from "../middleware/authMiddleware";
+import protect from "../middleware/authMiddleware";
 
 
 
 
 //to create a new post
-router.post('/create-post', createNewPost);
+router.post('/create-post', protect, createNewPost);
 
 //to get the list of posts in server
 router.get('/fetch-posts', fetchAllPosts);

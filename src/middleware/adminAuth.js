@@ -1,24 +1,17 @@
-import jwt from "jsonwebtoken";
-import { User } from "../models/userModel";
+import { Admin } from "../models/adminModel";
 
-
-
-// @desc    Authenticate user
-// @route   
-// @access  Private
-const protect = async (req, res, next) => {
-  let token;
-  console.log(req.headers);
+const protectAdmin = async () => {
+  let adminToken;
   if (req.headers.authorization) {
     try {
-      token = req.headers.authorization;
-      const decoded = jwt.verify(token, process.env.JWT_KEY_SECRET);
-      User.findOne({ _id: decoded.userId })
+      adminToken = req.headers.authorization;
+      const decoded = jwt.verify(adminToken, process.env.JWT_KEY_SECRET);
+
+      Admin.findOne({ _id: decoded.userId })
         .select("-password")
-        .then((user) => {
-          if (user) {
-            req.user = user;
-            console.log(user);
+        .then((admin) => {
+          if (admin) {
+            req.admin = admin;
             next();
           } else {
             // User not found
@@ -29,7 +22,7 @@ const protect = async (req, res, next) => {
             });
           }
         })
-        .catch((error) => {
+        .catch((err) => {
           // Handle database errors
           console.error(error);
           res.status(200).json({
@@ -38,7 +31,7 @@ const protect = async (req, res, next) => {
             error_code: "INTERNAL_SERVER_ERROR",
           });
         });
-    } catch (e) {
+    } catch (error) {
       // Token verification failed
       console.error(e);
       res.status(200).json({
@@ -57,4 +50,5 @@ const protect = async (req, res, next) => {
   }
 };
 
-export default protect;
+
+export default protectAdmin
