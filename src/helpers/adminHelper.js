@@ -25,6 +25,8 @@ export const adminLogin = (data) => {
               status: 200,
               message: "Admin login successful",
               adminToken,
+              admin,
+              valid: true
             });
           })
           .catch((error) => {

@@ -1,7 +1,9 @@
 import { Admin } from "../models/adminModel";
+import jwt from "jsonwebtoken"
 
-const protectAdmin = async () => {
+const protectAdmin = async (req, res, next) => {
   let adminToken;
+  
   if (req.headers.authorization) {
     try {
       adminToken = req.headers.authorization;
@@ -12,6 +14,7 @@ const protectAdmin = async () => {
         .then((admin) => {
           if (admin) {
             req.admin = admin;
+            console.log("this is the admin",req.admin);
             next();
           } else {
             // User not found
@@ -33,7 +36,7 @@ const protectAdmin = async () => {
         });
     } catch (error) {
       // Token verification failed
-      console.error(e);
+      console.error(error);
       res.status(200).json({
         message: "User not authorized",
         status: 401,
