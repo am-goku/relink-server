@@ -103,7 +103,7 @@ export const registration = ({username,email,password})=>{
 export const getUsers = (query) =>{
     try {
         return new Promise((resolve, reject) => {
-            User.find(query).select("-password").then((users) => {
+            User.find(query).select("-password").exec().then((users) => {
                 resolve({status:200, message: "User fetched successfully", users});
             }).catch((err) => {
                 console.log("error fetching users", err);

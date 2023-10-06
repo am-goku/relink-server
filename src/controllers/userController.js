@@ -77,7 +77,7 @@ export const registerUser = (req, res) => {
 export const fetchUsers = (req, res) => {
   try {
     let query = {};
-    if(req.query.userId){
+    if(req.query?.userId){
       query = {_id: req.query.userId}
     }
     getUsers(query).then((response) => {
