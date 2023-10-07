@@ -1,5 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"; //importing mongoose
 
+
+// @desc    Mongoose configuration
+// @file   < Config >
+// @access  Private
 export const connect = () => {
   mongoose.connect(
     process.env.MONGODB_SERVER,

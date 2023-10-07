@@ -1,15 +1,15 @@
-import bcrypt, { hash } from 'bcrypt';
-const saltRounds = 10;
-
-import generateJwt from '../services/jwt.js';
+import bcrypt, { hash } from 'bcrypt';  //imporing bcrypt
+const saltRounds = 10;  //setting salt rounds
+import generateJwt from '../services/jwt.js';   //imporing jwt function to generate jwt token
 
 //importing models
 import {User} from "../models/userModel.js"; //userModel
 
 
 
-
-
+// @desc    Login user
+// @route   POST /users/login
+// @access  Public
 export const userLogin = ({username, email, password}) => {
     try {
         return new Promise((resolve, reject) => {
@@ -49,8 +49,9 @@ export const userLogin = ({username, email, password}) => {
 }
 
 
-
-
+// @desc    Register user
+// @route   POST /users/register
+// @access  Public
 export const registration = ({username,email,password})=>{
     try {
         return new Promise(async (resolve, reject) => {
@@ -98,8 +99,9 @@ export const registration = ({username,email,password})=>{
 };
 
 
-
-
+// @desc    Fetch users || Fetch user
+// @route   GET /admin/users
+// @access  Public
 export const getUsers = (query) =>{
     try {
         return new Promise((resolve, reject) => {

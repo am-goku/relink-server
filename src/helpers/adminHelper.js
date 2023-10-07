@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
-import generateJwt from "../services/jwt";
-import { Admin } from "../models/adminModel";
+import generateJwt from "../services/jwt"; //importing function to generate JWT Token
+import bcrypt from "bcrypt";  //importing bcrypt
 
-import bcrypt from "bcrypt";
+//importing models
+import { Admin } from "../models/adminModel";
 
 
 

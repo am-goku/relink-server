@@ -1,10 +1,12 @@
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"; //importing jwt from jsonwebtoken
+
+//importing models
 import { User } from "../models/userModel";
 
 
 
-// @desc    Authenticate user
-// @route   
+// @desc    User authentication
+// @route   < Middleware >
 // @access  Private
 const protect = async (req, res, next) => {
   let token;

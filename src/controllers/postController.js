@@ -1,7 +1,5 @@
+//importing helpers
 import { createPost, getAllPosts } from "../helpers/postHelper";
-
-
-
 
 // @desc    Create new post
 // @route   POST /post/create-post

@@ -1,11 +1,9 @@
+//importing models
 import { Post } from "../models/postModel";
 
-
-
-
-// function which helps to create a new post data into the databse and it allows the client to upload a new
-// post in the databse and it takes the userId of the user who posts and the image url from cloudinary then 
-// the description of the post and saves it to the databse.
+// @desc    Create post
+// @route   POST /users/create-post
+// @access  Public
 export const createPost = ({ userId, image, description }) => {
   try {
     return new Promise((resolve, reject) => {
@@ -41,16 +39,16 @@ export const createPost = ({ userId, image, description }) => {
 };
 
 
-
-// Method which allows to fetch all the posts from the databse and it will fetch the posts in the databse
-// and return it as an array with the status code and messages to identify the status from the server.
-// it doesnt take any parameters beacuse it fetches all posts in the posts collection in the databse.
+// @desc    Fetch posts
+// @route   POST /users/fetch-posts
+// @access  Public
 export const getAllPosts = (query) => {
   try {
     return new Promise((resolve, reject) => {
-      Post.find(query)
+      Post.find(query).sort({date:-1}).exec()
         .then((posts) => {
           if (posts) {
+            console.log(posts);
             resolve({
               status: 200,
               message: "post fetched successfully",

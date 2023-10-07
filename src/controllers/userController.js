@@ -1,9 +1,7 @@
-//importing Helpers
-import { getUsers, registration, userLogin } from "../helpers/userHelper.js";
 import { json, response } from "express";
 
-
-
+//importing Helpers
+import { getUsers, registration, userLogin } from "../helpers/userHelper.js";
 
 
 // @desc    Login user
@@ -23,8 +21,6 @@ export const login = (req, res, next) => {
 }
 
 
-//This function is used to get the usernames and emails of existing user as an array from a
-//helper function getUser which returns the details of all users in the server.
 // @desc    Get username & email
 // @route   GET /user/userdetails
 // @access  Public
@@ -49,7 +45,6 @@ export const getUserdetails = (req, res) => {
 };
 
 
-
 // @desc    Register user data
 // @route   POST /user/register
 // @access  Public
@@ -68,7 +63,6 @@ export const registerUser = (req, res) => {
     console.log("Error in registerUser (userController)", error);
   }
 };
-
 
 
 // @desc    Get users

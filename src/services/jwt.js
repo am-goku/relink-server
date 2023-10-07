@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken'
 
+
+// @desc    Sign JWT token
+// @file   < Middleware >
+// @access  Private
 const generateJwt = (data) =>{
     try {
         return new Promise((resolve,reject) => {

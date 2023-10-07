@@ -1,9 +1,14 @@
-import { Admin } from "../models/adminModel";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken"; //importing jwt from jsonwebtoken
 
+//importing models
+import { Admin } from "../models/adminModel";
+
+
+// @desc    Admin authentication
+// @route   < Middleware >
+// @access  Private
 const protectAdmin = async (req, res, next) => {
   let adminToken;
-  
   if (req.headers.authorization) {
     try {
       adminToken = req.headers.authorization;

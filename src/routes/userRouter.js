@@ -1,25 +1,24 @@
 import { Router } from "express";
-import {
-    fetchUsers,
-  getUserdetails,
-  login,
-  registerUser,
-} from "../controllers/userController.js";
 const router = Router();
 
+//IMPORTING CONTROLLERS
+import {fetchUsers, login, registerUser, getUserdetails,} from "../controllers/userController.js";
 
 
-
-//route to get the list of username and password as an array
+// @desc    Fetch username && email
+// @access  Private
 router.get("/userdetails", getUserdetails);
 
-//route to fetch details of all users
+// @desc    Fetch users
+// @access  Authenticated users
 router.get("/fetch-users", fetchUsers);
 
-//routes for the login
+// @desc    Login user
+// @access  Public
 router.post("/login", login);
 
-//routes fot the registration process
+// @desc    Register user
+// @access  Public
 router.post("/register", registerUser);
 
 

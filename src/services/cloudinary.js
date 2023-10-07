@@ -1,5 +1,9 @@
 import { v2 as cloudinary } from "cloudinary";
 
+
+// @desc    Cloundinary configuration
+// @file   < Config >
+// @access  Private
 const cloudinaryConfig = ()=>{
     cloudinary.config({
       cloud_name: process.env.CLOUD_NAME,

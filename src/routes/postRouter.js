@@ -1,17 +1,21 @@
 import { Router } from "express";
 const router = Router();
 
-
+//importing controllers
 import { createNewPost, fetchAllPosts } from "../controllers/postController";
+
+//importing middleware
 import protect from "../middleware/authMiddleware";
 
 
 
 
-//to create a new post
+// @desc    Create post
+// @access  Authenticated user
 router.post('/create-post', protect, createNewPost);
 
-//to get the list of posts in server
+// @desc    Fetch posts
+// @access  Authenticated user
 router.get('/fetch-posts', fetchAllPosts);
 
 

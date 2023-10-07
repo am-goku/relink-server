@@ -25,8 +25,6 @@ export const authUser = (req, res) => {
 };
 
 
-
-
 // @desc    Returns admin after Auth
 // @route   GET /auth/admin
 // @access  Private
