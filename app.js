@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan'
 import dotenv from 'dotenv';
-import { v2 as cloudinary } from 'cloudinary';
 
 import {connect} from './src/config/mongoose.js';
 import cloudinaryConfig from './src/services/cloudinary.js';
