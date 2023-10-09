@@ -19,9 +19,18 @@ const protect = async (req, res, next) => {
         .select("-password")
         .then((user) => {
           if (user) {
-            req.user = user;
-            console.log(user);
-            next();
+            if(!user.blocked){
+              req.user = user;
+              console.log(user);
+              next();
+            } else {
+              // User has been blocked
+              res.status(200).json({
+                message: "User has been blocked",
+                status: 401,
+                error_code: "BLOCKED_USER",
+              });
+            }
           } else {
             // User not found
             res.status(200).json({

@@ -1,7 +1,7 @@
 import { json, response } from "express";
 
 //importing Helpers
-import { getUsers, registration, userLogin } from "../helpers/userHelper.js";
+import { getUsers, registration, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
 
 
 // @desc    Login user
@@ -82,5 +82,47 @@ export const fetchUsers = (req, res) => {
 
   } catch (error) {
     console.log("error in fetchUsers (userController)", error);
+  }
+};
+
+
+
+
+
+
+// @desc    To send user verification email
+// @route   GET /user/fetch-users
+// @access  Public
+export const sentVerificationEmail = (req, res) => {
+  try {
+    const email = req.body.email;
+    verifyEmail(email).then((response) => {
+      res.status(200).send(response)
+    }).catch((error) => {
+      res.status(error.status).send(error)
+    })
+  } catch (error) {
+    res.status(500).send({
+      status: 500,
+      error_code: "INTERNAL_SERVER_ERROR",
+      message: "Somethings wrong please try after sometime.",
+    });
+  }
+};
+
+
+// @desc    Verify otpToken
+// @route   GET /user/fetch-users
+// @access  Public
+export const verifyOTP = (req, res, next) => {
+  try {
+    const {email, otpToken} = req.body;
+    verifyEmailToken(email, otpToken).then((response)=> {
+      res.status(200).send(response);
+    }).catch((error)=> {
+      res.status(error.status).send(error);
+    })
+  } catch (error) {
+    res.status(500).send(error)
   }
 }

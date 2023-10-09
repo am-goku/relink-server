@@ -16,7 +16,7 @@ router.post('/create-post', protect, createNewPost);
 
 // @desc    Fetch posts
 // @access  Authenticated user
-router.get('/fetch-posts', fetchAllPosts);
+router.get('/fetch-posts', protect, fetchAllPosts);
 
 
 

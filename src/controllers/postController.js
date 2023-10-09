@@ -44,3 +44,5 @@ export const fetchAllPosts = (req, res) => {
         console.log("Error fetching all posts (in postController): " + error);
     }
 };
+
+

@@ -3,6 +3,7 @@ const router = Router();
 
 //IMPORTING CONTROLLERS
 import {fetchUsers, login, registerUser, getUserdetails,} from "../controllers/userController.js";
+import protect from "../middleware/authMiddleware.js";
 
 
 // @desc    Fetch username && email

@@ -1,5 +1,5 @@
 //importing helpers
-import { adminLogin } from "../helpers/adminHelper";
+import { adminLogin, toggelBlockStatus } from "../helpers/adminHelper";
 
 
 
@@ -20,3 +20,17 @@ export const adminPostLogin = (req, res, next) => {
     }
 }
 
+
+export const changeStatus = (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const status = req.body.status;
+        toggelBlockStatus(userId, status).then((response) =>{
+            res.status(200).send(response);
+        }).catch((error) => {
+            res.status(500).send(error.message);
+        })
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
