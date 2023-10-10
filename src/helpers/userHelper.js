@@ -4,7 +4,7 @@ import generateJwt from "../services/jwt.js"; //imporing jwt function to generat
 
 //importing models
 import { User } from "../models/userModel.js"; //userModel
-import verificationEmail from "../services/nodemailer.js";
+import {verificationEmail, verifyOtpToken} from "../services/nodemailer.js";
 import { Verify } from "../models/verifyModel.js";
 
 // @desc    Login user
@@ -175,22 +175,14 @@ export const verifyEmail = (email) => {
                 });
               })
               .catch((error) => {
-                resolve({
-                  status: 500,
-                  error_code: "NODEMAILER_ERROR",
-                  message: "Somethings wrong please try after sometime.",
-                });
+                reject(error);
               });
           } else {
-            resolve({ status: 404, message: "User not found" });
+            reject({ status: 404, message: "User not found" });
           }
         })
         .catch((error) => {
-          resolve({
-            status: 500,
-            error_code: "DB_FETCH_ERROR",
-            message: "Somethings wrong please try after sometime.",
-          });
+          reject(error);
         });
     } catch (error) {
       reject({
@@ -210,56 +202,32 @@ export const verifyEmail = (email) => {
 export const verifyEmailToken = (email, token) => {
   return new Promise((resolve, reject) => {
     try {
-      Verify.findOne({ email: email })
-        .then((data) => {
-          if (data) {
-            if (data.token === token) {
-              User.findOne({ email: email })
-                .then((user) => {
-                  if (user) {
-                    generateJwt(user)
-                      .then((token) => {
-                        if (token) {
-                          resolve({
-                            status: 200,
-                            message: "Email verified successfully",
-                            token: token,
-                          });
-                        }
-                      })
-                      .catch((error) => {
-                        reject({
-                          status: 500,
-                          error_code: "TOKEN_ERROR",
-                          message:
-                            "Somethings wrong please try after sometime.",
-                        });
-                      });
-                  }
-                })
-                .reject((error) => {
+      verifyOtpToken(email, token).then(async (response) => {
+          User.findOne({email: email}).then((user)=> {
+            if (!user.blocked) {
+              generateJwt(user)
+                .then((jwtToken) => {
                   resolve({
-                    status: 500,
-                    error_code: "DB_FETCH_ERROR",
-                    message: "Somethings wrong please try after sometime.",
+                    status: 200,
+                    message: "Login successful",
+                    token: jwtToken,
                   });
+                })
+                .catch((error) => {
+                  reject(error);
                 });
+            } else {
+              reject({
+                status: 401,
+                message: "Sorry, Your account has been temporarily blocked.",
+              });
             }
-          } else {
-            reject({
-              status: 500,
-              error_code: "INVALID_STATE",
-              message: "Somethings wrong please try after sometime.",
-            });
-          }
-        })
-        .catch((error) => {
-          reject({
-            status: 500,
-            error_code: "DB_FETCH_ERROR",
-            message: "Somethings wrong please try after sometime.",
-          });
-        });
+          }).catch((error) => {
+            reject(error);
+          })
+      }).catch((error) => {
+        reject(error);
+      })
     } catch (error) {
       reject({
         status: 500,

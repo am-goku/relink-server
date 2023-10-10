@@ -5,8 +5,8 @@ import { Post } from "../models/postModel";
 // @route   POST /users/create-post
 // @access  Public
 export const createPost = ({ userId, image, description }) => {
-  try {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
+    try {
       const newPost = new Post({
         userId: userId,
         image: image,
@@ -14,11 +14,12 @@ export const createPost = ({ userId, image, description }) => {
       });
       newPost
         .save()
-        .then((response) => {
-          if (response) {
+        .then((post) => {
+          if (post) {
             resolve({
               status: 200,
               message: "Created post successfully",
+              post,
             });
           } else {
             throw new Error("No response found");
@@ -26,16 +27,22 @@ export const createPost = ({ userId, image, description }) => {
         })
         .catch((err) => {
           console.log("Error saving post", err);
-          resolve({
+          reject({
             status: 500,
             error_code: "DB_SAVE_ERROR",
             message: "Somethings wrong, Please try again later.",
+            error_message: err.message,
           });
         });
-    });
-  } catch (error) {
-    console.log("error in creating Post (in postHelper)", error);
-  }
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Somethings wrong, Please try again later.",
+        error_message: error.message,
+      });
+    }
+  });
 };
 
 
@@ -43,12 +50,13 @@ export const createPost = ({ userId, image, description }) => {
 // @route   POST /users/fetch-posts
 // @access  Public
 export const getAllPosts = (query) => {
-  try {
-    return new Promise((resolve, reject) => {
-      Post.find(query).sort({date:-1}).exec()
+  return new Promise((resolve, reject) => {
+    try {
+      Post.find(query)
+        .sort({ date: -1 })
+        .exec()
         .then((posts) => {
           if (posts) {
-            console.log(posts);
             resolve({
               status: 200,
               message: "post fetched successfully",
@@ -59,19 +67,41 @@ export const getAllPosts = (query) => {
           }
         })
         .catch((err) => {
-          console.log("Error fetching posts from database", err);
-          resolve({
+          reject({
             status: 500,
             error_code: "DB_FETCH_ERROR",
             message: "Somethings wrong, Please try again later.",
+            error_message: err.message
           });
         });
-    });
-  } catch (error) {
-    console.log("Error in getting list of posts (in postHelper)", error);
-  }
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Somethings wrong, Please try again later.",
+        error_message: error.message,
+      });
+    }
+  });
 };
 
 
 
 
+
+// @desc    Fetch a user's posts
+// @route   GET /post/fetchUserPosts
+// @access  Registerd users
+export const fetchUserPosts = (userId) => {
+  return new Promise ((resolve, reject) => {
+    try {
+      Post.find({userId: userId}).lean().then((posts)=> {
+        resolve(posts);
+      }).catch((err) => {
+        reject(err);
+      })
+    } catch (error) {
+      reject(error);
+    }
+  })
+}

@@ -1,5 +1,5 @@
 //importing helpers
-import { createPost, getAllPosts } from "../helpers/postHelper";
+import { createPost, fetchUserPosts, getAllPosts } from "../helpers/postHelper";
 
 // @desc    Create new post
 // @route   POST /post/create-post
@@ -8,13 +8,26 @@ export const createNewPost = (req, res, next) => {
     try {
         const postData = req.body;
         createPost(postData).then((response)=>{
-            res.status(response.status).json({...response});
+            res.status(response.status).json({ ...response });
         }).catch((error) => {
-            console.log("Error creating post (in postController): " + error);
-            res.status(500).json({status: 500, error_code: "INTERNAL_SERVER_ERROR", message: "Somethings wrong, Please try after sometime."})
+            res
+              .status(error.status)
+              .json({
+                status: 500,
+                error_code: "INTERNAL_SERVER_ERROR",
+                message: "Somethings wrong, Please try after sometime.",
+                error_message: error.message
+              });
         });
     } catch (error) {
-        console.log("Error creating post (in postController): " + error);
+        res
+          .status(500)
+          .json({
+            status: 500,
+            error_code: "INTERNAL_SERVER_ERROR",
+            message: "Somethings wrong, Please try after sometime.",
+            error_message: error.message
+          });
     }
 };
 
@@ -31,17 +44,40 @@ export const fetchAllPosts = (req, res) => {
         getAllPosts(query).then((response)=>{
             res.status(response.status).json({...response});
         }).catch((error)=>{
-            console.log("Error fetching posts: " + error);
             res
-              .status(500)
+              .status(error.status)
               .json({
                 status: 500,
                 error_code: "INTERNAL_SERVER_ERROR",
-                message: "Somethings wrong, Please try after sometime."
+                message: "Somethings wrong, Please try after sometime.",
+                error_message: error.message
               });
         });
     } catch (error) {
-        console.log("Error fetching all posts (in postController): " + error);
+        res.status(error.status).json({
+          status: 500,
+          error_code: "INTERNAL_SERVER_ERROR",
+          message: "Somethings wrong, Please try after sometime.",
+          error_message: error.message,
+        });
+    }
+};
+
+
+
+// @desc    Fetch a user's posts
+// @route   GET /post/fetchUserPosts
+// @access  Registerd users
+export const ctrlFetchUserPosts = (req, res, next) => {
+    try {
+        const userId = req.query.userId;
+        fetchUserPosts(userId).then((posts)=> {
+            res.status(200).send({status:200, posts:posts});
+        }).catch((error) => {
+            res.status(error.status).send(error)
+        })
+    } catch (error) {
+        res.status(500).send(error);
     }
 };
 

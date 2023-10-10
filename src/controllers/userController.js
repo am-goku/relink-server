@@ -117,9 +117,11 @@ export const sentVerificationEmail = (req, res) => {
 export const verifyOTP = (req, res, next) => {
   try {
     const {email, otpToken} = req.body;
+    console.log(req.body);
     verifyEmailToken(email, otpToken).then((response)=> {
       res.status(200).send(response);
     }).catch((error)=> {
+      console.log(error);
       res.status(error.status).send(error);
     })
   } catch (error) {

@@ -1,6 +1,6 @@
 import nodemailer, { createTransport } from "nodemailer";
 
-export const sentEmail = async (email, token) => {
+export const sentEmail = async (email, username, token) => {
   return new Promise(async (resolve, reject) => {
     try {
       const transporter = createTransport({
@@ -10,6 +10,9 @@ export const sentEmail = async (email, token) => {
           user: process.env.EMAIL,
           pass: process.env.PASS,
         },
+        tls: {
+          rejectUnauthorized:false,
+        }
       });
 
       const template =`<!DOCTYPE html>
@@ -39,8 +42,10 @@ export const sentEmail = async (email, token) => {
         text: "",
         html: template // plain text body
       });
+      console.log("response in sentemail", info);
       resolve(info);
     } catch (error) {
+      console.log("error in sentmail: " + error);
       reject(error);
     }
   });

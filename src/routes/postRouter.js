@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { createNewPost, fetchAllPosts } from "../controllers/postController";
+import { createNewPost, ctrlFetchUserPosts, fetchAllPosts } from "../controllers/postController";
 
 //importing middleware
 import protect from "../middleware/authMiddleware";
@@ -17,6 +17,11 @@ router.post('/create-post', protect, createNewPost);
 // @desc    Fetch posts
 // @access  Authenticated user
 router.get('/fetch-posts', protect, fetchAllPosts);
+
+
+// @desc    Fetch a user's posts
+// @access  Registerd users
+router.get("/fetchUserPosts", protect, ctrlFetchUserPosts);
 
 
 
