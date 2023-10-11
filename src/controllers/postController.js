@@ -1,5 +1,6 @@
 //importing helpers
-import { createPost, fetchUserPosts, getAllPosts } from "../helpers/postHelper";
+import { response } from "express";
+import { addCommentHelper, createPost, deleteCommentHelper, fetchAPost, fetchCommentHelper, fetchUserPosts, getAllPosts, likePostHelper, unlikePostHelper } from "../helpers/postHelper";
 
 // @desc    Create new post
 // @route   POST /post/create-post
@@ -11,7 +12,7 @@ export const createNewPost = (req, res, next) => {
             res.status(response.status).json({ ...response });
         }).catch((error) => {
             res
-              .status(error.status)
+              .status(500)
               .json({
                 status: 500,
                 error_code: "INTERNAL_SERVER_ERROR",
@@ -32,20 +33,34 @@ export const createNewPost = (req, res, next) => {
 };
 
 
+// @desc    Fetch single posts
+// @route   GET /post/fetch-single-post
+// @access  Authenticated user
+export const fetchSinglePost = (req, res) => {
+    try {
+        const {postId} = req.params;
+        fetchAPost(postId).then((response) => {
+            res.status(200).send(response);
+        }).catch((error) => {
+            res.status(500).send(error)
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+
 // @desc    Get post data
 // @route   GET /post/fetch-posts
 // @access  Public
 export const fetchAllPosts = (req, res) => {
     try{
-        let query = {};
-        if(req.query.postId){
-            query = { _id: req.query.postId };
-        }
-        getAllPosts(query).then((response)=>{
+        
+        getAllPosts().then((response)=>{
             res.status(response.status).json({...response});
         }).catch((error)=>{
             res
-              .status(error.status)
+              .status(500)
               .json({
                 status: 500,
                 error_code: "INTERNAL_SERVER_ERROR",
@@ -54,7 +69,7 @@ export const fetchAllPosts = (req, res) => {
               });
         });
     } catch (error) {
-        res.status(error.status).json({
+        res.status(500).json({
           status: 500,
           error_code: "INTERNAL_SERVER_ERROR",
           message: "Somethings wrong, Please try after sometime.",
@@ -74,7 +89,7 @@ export const ctrlFetchUserPosts = (req, res, next) => {
         fetchUserPosts(userId).then((posts)=> {
             res.status(200).send({status:200, posts:posts});
         }).catch((error) => {
-            res.status(error.status).send(error)
+            res.status(500).send(error)
         })
     } catch (error) {
         res.status(500).send(error);
@@ -82,3 +97,85 @@ export const ctrlFetchUserPosts = (req, res, next) => {
 };
 
 
+
+// @desc    Like post
+//@route    FETCH /post/like-post
+// @access  Registerd users
+export const likePost = (req, res) => {
+    try {
+        const {postId, userId} = req.body;
+        likePostHelper(userId, postId).then((response) => {
+            res.status(200).send(response);
+        }).catch((error) => {
+            res.status(500).send(error);
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+// @desc    Unlike a post
+//@route    FETCH /post/unlike-post
+// @access  Registerd users
+export const unlikePost = (req, res) => {
+    try {
+        const {postId, userId} = req.body;
+        unlikePostHelper(userId, postId).then((response) => {
+            res.status(200).send(response);
+        }).catch((error) => {
+            res.status(500).send(error);
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+
+
+// @desc    Comment a post
+//@route    POST /post/add-comment
+// @access  Registerd users
+export const addComment = (req, res) => {
+    try {
+        const {userId, postId, content} = req.body;
+        addCommentHelper(userId, postId, content).then((response)=> {
+            res.status(200).send(response);
+        }).catch((error)=> {
+            res.status(500).send(error);
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+// @desc    Delete comment
+//@route    DELETE /post/delete-comment
+// @access  Registerd users
+export const deleteComment = (req, res) => {
+    try {
+        const {commentId} = req.body;
+        deleteCommentHelper(commentId).then((response) => {
+            res.status(200).send(response);
+        }).catch((error) => {
+            res.status(500).send(error);
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+// @desc    Get comment
+//@route    GET /post/fetch-comment
+// @access  Registerd users
+export const fetchComment = (req, res) => {
+    try {
+        const {postId} = req.body;
+        fetchCommentHelper(postId).then((comments) => {
+            res.status(200).send(comments);
+        }).catch((error) => {
+            res.status(500).send(error);
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}

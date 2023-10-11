@@ -6,6 +6,8 @@ import generateJwt from "../services/jwt.js"; //imporing jwt function to generat
 import { User } from "../models/userModel.js"; //userModel
 import {verificationEmail, verifyOtpToken} from "../services/nodemailer.js";
 import { Verify } from "../models/verifyModel.js";
+import { Post } from "../models/postModel.js";
+import { Connection } from "../models/connectionModel.js";
 
 // @desc    Login user
 // @route   POST /users/login
@@ -34,6 +36,7 @@ export const userLogin = ({ username, email, password }) => {
                           status: 200,
                           message: "Login successful",
                           token,
+                          user
                         });
                       })
                       .catch((error) => {
@@ -236,4 +239,141 @@ export const verifyEmailToken = (email, token) => {
       });
     }
   });
+};
+
+
+
+
+
+
+
+// @desc    Save post
+// @route   PUT /user/:userId/save/post/:postId
+// @access  Registerd users
+export const savePostHelper = (userId, postId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      User.findOneAndUpdate({_id: userId}, {$push: {savedPosts: postId}}, {new: true}).then((user)=> {
+        Post.findOneAndUpdate({_id: postId}, {$push: {saved: userId}}, {new: true}).then((post)=> {
+          resolve({user, post})
+        }).catch((error) => reject(error))
+      }).catch((err) => {
+        reject(err);
+      })
+    } catch (error) {
+      reject(err);
+    }
+  })
+};
+
+// @desc    Remove from saved
+// @route   DELETE /user/:userId/save/post/remove/:postId
+// @access  Registerd users
+export const removeSavePostHelper = (userId, postId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      User.findOneAndUpdate({_id: userId}, {$pull: {savedPosts: postId}}, {new: true}).then((user)=> {
+        Post.findOneAndUpdate({_id:postId}, {$pull: {saved: userId}}, {new: true}).then((post)=> {
+          resolve({user, post})
+        }).catch((error) => reject(error))
+      }).catch((error)=> {
+        reject(error);
+      })
+    } catch (error) {
+      reject(error);
+    }
+  })
+};
+
+
+
+
+///////////////////////////////////////////----CONNECTION SECTION----/////////////////////////////////////////////////////////////////
+
+const isValidUserId = async (userId) => {
+  try {
+    const user = await User.findOne({_id: userId});
+    return !!user;
+  } catch (error) {
+    return false;
+  }
+}
+
+// @desc    Follow user
+// @route   POST /user/:userId/follow/:followeeUserId
+// @access  Registerd users
+export const followHelper = (userId, followeeId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      //Checking userIDs
+      if (!isValidUserId(userId) && !isValidUserId(followeeId)) {
+        reject(new Error("Invalid user ID"));
+        return;
+      }
+
+      Connection.findOneAndUpdate(
+        { userId: userId },
+        { $addToSet: { following: followeeId } },
+        { upsert: true, new: true }
+      )
+        .then((userConnection) => {
+          Connection.findOneAndUpdate(
+            { userId: followeeId },
+            { $addToSet: { followers: userId } },
+            { upsert: true, new: true }
+          )
+            .then((followeeConnection) => {
+              resolve({ userConnection, followeeConnection });
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+
+// @desc    Unfollow user
+// @route   POST /user/:userId/unfollow/:followeeUserId
+// @access  Registerd users
+export const unfollowHelper = (userId, followeeId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      //Checking userIDs
+      if (!isValidUserId(userId) && !isValidUserId(followeeId)) {
+        reject(new Error("Invalid user ID"));
+        return;
+      }
+
+      Connection.findOneAndUpdate(
+        { userId: userId },
+        { $pull: { following: followeeId } },
+        { new: true }
+      )
+        .then((userConnection) => {
+          Connection.findOneAndUpdate(
+            { userId: followeeId },
+            { $pull: { followers: userId } },
+            { new: true }
+          )
+            .then((followeeConnection) => {
+              resolve({ userConnection, followeeConnection });
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  })
 };

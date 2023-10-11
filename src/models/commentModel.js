@@ -21,15 +21,12 @@ const commentSchema = new Schema({
         maxLength: 255,
     },
 
-    date: {
-        type: Date,
-        default: Date.now
-    },
-
     deleted: {
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true,
 });
 
 

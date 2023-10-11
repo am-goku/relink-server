@@ -1,4 +1,5 @@
 //importing models
+import { Comment } from "../models/commentModel";
 import { Post } from "../models/postModel";
 
 // @desc    Create post
@@ -49,10 +50,10 @@ export const createPost = ({ userId, image, description }) => {
 // @desc    Fetch posts
 // @route   POST /users/fetch-posts
 // @access  Public
-export const getAllPosts = (query) => {
+export const getAllPosts = () => {
   return new Promise((resolve, reject) => {
     try {
-      Post.find(query)
+      Post.find()
         .sort({ date: -1 })
         .exec()
         .then((posts) => {
@@ -88,6 +89,27 @@ export const getAllPosts = (query) => {
 
 
 
+// @desc    Fetch single posts
+// @route   GET /post/fetch-single-post
+// @access  Authenticated user
+export const fetchAPost = (postId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Post.findOne({_id: postId}).then((post) => {
+        resolve(post);
+      }).catch((error) =>{
+        reject(error);
+      })
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+
+
+
+
 
 // @desc    Fetch a user's posts
 // @route   GET /post/fetchUserPosts
@@ -102,6 +124,93 @@ export const fetchUserPosts = (userId) => {
       })
     } catch (error) {
       reject(error);
+    }
+  })
+}
+
+
+// @desc    Like post
+//@route    FETCH /post/like-post
+// @access  Registerd users
+export const likePostHelper = (userId, postId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Post.findOneAndUpdate({_id: postId}, {$push: {likes: userId }}, {new: true}).then((response)=> {
+        resolve(response)
+      }).catch((error) => reject(error));
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+// @desc    Unlike post
+//@route    FETCH /post/unlike-post
+// @access  Registerd users
+export const unlikePostHelper = (userId, postId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Post.findOneAndUpdate({_id: postId}, {$pull: {likes: userId}}, {new: true}).then((response) => {
+        resolve(response);
+      }).catch((error) => reject(error));
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+
+
+// @desc    Add comment
+//@route    POST /post/add-comment
+// @access  Registerd users
+export const addCommentHelper = (userId, postId, content) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const newComment = new Comment({
+        userId: userId,
+        postId: postId,
+        content: content,
+      });
+
+      newComment
+        .save()
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => reject(error));
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// @desc    Delete comment
+//@route    DELETE /post/delete-comment
+// @access  Registerd users
+export const deleteCommentHelper = (commentId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Comment.findOneAndUpdate({_id: commentId}, {deleted: true}).then((response) => {
+        resolve(response)
+      }).catch((err) => reject(err))
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+// @desc    Get comment
+//@route    GET /post/fetch-comment
+// @access  Registerd users
+export const fetchCommentHelper = (postId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Comment.find({postId: postId, deleted: false}).then((comment) => {
+        resolve(comment);
+      }).catch((err) => reject(err))
+    } catch (error) {
+      reject(error)
     }
   })
 }

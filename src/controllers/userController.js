@@ -1,7 +1,7 @@
 import { json, response } from "express";
 
 //importing Helpers
-import { getUsers, registration, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
+import { followHelper, getUsers, registration, removeSavePostHelper, savePostHelper, unfollowHelper, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
 
 
 // @desc    Login user
@@ -126,5 +126,75 @@ export const verifyOTP = (req, res, next) => {
     })
   } catch (error) {
     res.status(500).send(error)
+  }
+};
+
+
+// @desc    Save post
+// @route   PUT /user/:userId/save/post/:postId
+// @access  Registerd users
+export const savePost = (req, res) => {
+  try {
+    const {userId, postId} = req.params;
+    savePostHelper(userId, postId).then((response) => {
+      res.status(200).send(response);
+    }).catch((error) => {
+      res.status(500).send(error);
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+// @desc    Remove saved post
+// @route   PUT /user/:userId/save/post/remove/:postId
+// @access  Registerd users
+export const removeSavedPost = (req, res) => {
+  try {
+    const { userId, postId } = req.params;
+    removeSavePostHelper(userId, postId).then((response)=> {
+      res.status(200).send(response);
+    }).catch((error) => {
+      res.status(500).send(error);
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+
+
+
+///////////////////////////////////////////----CONNECTION SECTION----/////////////////////////////////////////////////////////////////
+
+// @desc    Follow user
+// @route   POST /user/:userId/follow/:followeeUserId
+// @access  Registerd users
+export const followUser = (req, res) => {
+  try {
+    const {userId, followeeUserId} = req.params;
+    followHelper(userId, followeeUserId).then((response) => {
+      res.status(200).send(response);
+    }).catch((error) => {
+      res.status(500).send(error);
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+// @desc    Unfollow user
+// @route   POST /user/:userId/unfollow/:followeeUserId
+// @access  Registerd users
+export const unfollowUser = (req, res) => {
+  try {
+    const {userId, followeeUserId} = req.params;
+    unfollowHelper(userId, followeeUserId).then((response)=> {
+      res.status(200).send(response);
+    }).catch((error) => {
+      res.status(500).send(error);
+    })
+  } catch (error) {
+    res.status(500).send(error);
   }
 }

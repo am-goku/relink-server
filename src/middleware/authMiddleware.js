@@ -25,7 +25,7 @@ const protect = async (req, res, next) => {
               next();
             } else {
               // User has been blocked
-              res.status(200).json({
+              res.status(401).json({
                 message: "User has been blocked",
                 status: 401,
                 error_code: "BLOCKED_USER",
@@ -33,7 +33,7 @@ const protect = async (req, res, next) => {
             }
           } else {
             // User not found
-            res.status(200).json({
+            res.status(401).json({
               message: "User not authorized",
               status: 401,
               error_code: "AUTHENTICATION_FAILED",
@@ -43,7 +43,7 @@ const protect = async (req, res, next) => {
         .catch((error) => {
           // Handle database errors
           console.error(error);
-          res.status(200).json({
+          res.status(500).json({
             message: "Internal Server Error",
             status: 500,
             error_code: "INTERNAL_SERVER_ERROR",
@@ -52,7 +52,7 @@ const protect = async (req, res, next) => {
     } catch (e) {
       // Token verification failed
       console.error(e);
-      res.status(200).json({
+      res.status(401).json({
         message: "User not authorized",
         status: 401,
         error_code: "AUTHENTICATION_FAILED",
@@ -60,7 +60,7 @@ const protect = async (req, res, next) => {
     }
   } else {
     // No token provided
-    res.status(200).json({
+    res.status(401).json({
       status: 401,
       message: "No token provided",
       error_code: "NO_TOKEN",

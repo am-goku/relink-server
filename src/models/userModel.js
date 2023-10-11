@@ -66,6 +66,16 @@ const userSchema = new Schema({
     default: [],
   },
 
+  savedPosts: {
+    type: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "post"
+      }
+    ],
+    default: [],
+  },
+
   online: {
     type: Boolean,
     default: false,
