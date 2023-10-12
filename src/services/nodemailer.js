@@ -36,7 +36,7 @@ export const verifyOtpToken = (email, token) => {
         try {
             Verify.findOne({email: email, used:false}).then(async (data) => {
                 console.log(data);
-                if(data.token === token) {
+                if(data?.token === token) {
                     await Verify.findOneAndUpdate({email: email, used: false}, {used:true});
                     resolve({valid:true, data})
                 } else {

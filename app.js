@@ -12,6 +12,7 @@ import adminRouter from './src/routes/adminRouter.js';
 import userRouter from './src/routes/userRouter.js';
 import postRouter from './src/routes/postRouter.js';
 import authRouter from './src/routes/authRouter.js';
+import bodyParser from 'body-parser';
 
 
 
@@ -31,10 +32,12 @@ cloudinaryConfig();
 
 //settingup corse options
 const corsOption = {
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:3000',
 }
 //middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cors(corsOption));
 
 app.use(logger("dev")); //logger

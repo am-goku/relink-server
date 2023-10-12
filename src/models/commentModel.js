@@ -18,7 +18,7 @@ const commentSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        maxLength: 255,
+        maxLength: 500,
     },
 
     deleted: {

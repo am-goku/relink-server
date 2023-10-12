@@ -169,7 +169,8 @@ export const deleteComment = (req, res) => {
 // @access  Registerd users
 export const fetchComment = (req, res) => {
     try {
-        const {postId} = req.body;
+        const {postId} = req.params;
+        console.log(req.body, req);
         fetchCommentHelper(postId).then((comments) => {
             res.status(200).send(comments);
         }).catch((error) => {

@@ -206,11 +206,15 @@ export const deleteCommentHelper = (commentId) => {
 export const fetchCommentHelper = (postId) => {
   return new Promise((resolve, reject) => {
     try {
-      Comment.find({postId: postId, deleted: false}).then((comment) => {
-        resolve(comment);
-      }).catch((err) => reject(err))
+      Comment.find({ postId: postId, deleted: false })
+        .sort({ createdAt: -1 })
+        .exec()
+        .then((comment) => {
+          resolve(comment);
+        })
+        .catch((err) => reject(err));
     } catch (error) {
-      reject(error)
+      reject(error);
     }
-  })
-}
+  });
+};

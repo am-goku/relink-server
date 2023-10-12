@@ -214,6 +214,8 @@ export const verifyEmailToken = (email, token) => {
                     status: 200,
                     message: "Login successful",
                     token: jwtToken,
+                    user,
+                    valid: true
                   });
                 })
                 .catch((error) => {

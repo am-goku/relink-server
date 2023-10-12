@@ -7,7 +7,8 @@ import jwt from 'jsonwebtoken'
 const generateJwt = (data) =>{
     try {
         return new Promise((resolve,reject) => {
-            const options = {expiresIn: '1h'}, payload = {};
+            const options = { expiresIn: '1h' },
+              payload = {};
             if(data._id){
               payload.userId = data._id;
             } else if (data.email){

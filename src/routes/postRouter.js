@@ -44,7 +44,7 @@ router.post('/add-comment', protect, addComment);
 router.delete('/delete-comment', protect, deleteComment);
 // @desc    Get comment
 // @access  Registerd users
-router.get('/fetch-comment', protect, fetchComment)
+router.get('/fetch-comments/:postId', protect, fetchComment)
 
 
 
