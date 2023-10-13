@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //IMPORTING CONTROLLERS
-import {fetchUsers, login, registerUser, getUserdetails, savePost, removeSavedPost, followUser,} from "../controllers/userController.js";
+import {fetchUsers, login, registerUser, getUserdetails, savePost, removeSavedPost, followUser, searchUser, fetchUserByUsername, getConnection, unfollowUser,} from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
 
 
@@ -13,6 +13,10 @@ router.get("/userdetails", getUserdetails);
 // @desc    Fetch users
 // @access  Authenticated users
 router.get("/fetch-users", fetchUsers);
+
+// @desc    Fetch user by username
+// @access Authenticated users
+router.get("/fetch/username/:username", fetchUserByUsername )
 
 // @desc    Login user
 // @access  Public
@@ -38,7 +42,17 @@ router.post("/:userId/follow/:followeeUserId", protect, followUser)
 
 // @desc    Unfollow user
 // @access  Registerd users
-router.post("/:userId/unfollow/:followeeUserId", protect, followUser)
+router.post("/:userId/unfollow/:followeeUserId", protect, unfollowUser)
+
+// @desc    Get connections
+// @access  Registerd users
+router.get("/fetch/connection/:userId", protect, getConnection)
+
+
+
+// @desc    Search user
+// @access  Registerd users
+router.get("/search/:key", searchUser)
 
 
 export default router;

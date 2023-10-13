@@ -317,13 +317,13 @@ export const followHelper = (userId, followeeId) => {
         { userId: userId },
         { $addToSet: { following: followeeId } },
         { upsert: true, new: true }
-      )
+      ).exec()
         .then((userConnection) => {
           Connection.findOneAndUpdate(
             { userId: followeeId },
             { $addToSet: { followers: userId } },
             { upsert: true, new: true }
-          )
+          ).exec()
             .then((followeeConnection) => {
               resolve({ userConnection, followeeConnection });
             })
@@ -345,37 +345,103 @@ export const followHelper = (userId, followeeId) => {
 // @route   POST /user/:userId/unfollow/:followeeUserId
 // @access  Registerd users
 export const unfollowHelper = (userId, followeeId) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      //Checking userIDs
-      if (!isValidUserId(userId) && !isValidUserId(followeeId)) {
+      console.log(userId, followeeId);
+      // Validate user IDs
+      if (!isValidUserId(userId) || !isValidUserId(followeeId)) {
         reject(new Error("Invalid user ID"));
         return;
       }
 
-      Connection.findOneAndUpdate(
+      // Update the user's following list
+      const userConnection = await Connection.findOneAndUpdate(
         { userId: userId },
         { $pull: { following: followeeId } },
         { new: true }
-      )
-        .then((userConnection) => {
-          Connection.findOneAndUpdate(
-            { userId: followeeId },
-            { $pull: { followers: userId } },
-            { new: true }
-          )
-            .then((followeeConnection) => {
-              resolve({ userConnection, followeeConnection });
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        })
-        .catch((error) => {
-          reject(error);
-        });
+      ).exec();
+
+      // Update the followee's followers list
+      const followeeConnection = await Connection.findOneAndUpdate(
+        { userId: followeeId },
+        { $pull: { followers: userId } },
+        { new: true }
+      ).exec();
+
+      resolve({ userConnection, followeeConnection });
     } catch (error) {
       reject(error);
     }
   })
 };
+
+// @desc    Get connections
+// @route   GET /user/fetch/connection/:userId
+// @access  Registerd users
+export const getConnectonHelper = (userId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Connection.findOne({userId: userId}).then((connection) => {
+        resolve(connection);
+      }).catch((error) => reject({
+        status:500,
+        error_code: "DB_FETCH_ERROR",
+        message:error.message,
+        error
+      }));
+    } catch (error) {
+      reject({
+        status:500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message:error.message,
+        error
+      });
+    }
+  })
+}
+
+
+// @desc    Search user
+// @route   GET /user/search/:Key
+// @access  Registerd users
+export const searchUserHelper = (key) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const regex = new RegExp(key, 'i');
+      User.find({name: regex}).then((users)=> {
+        resolve(users);
+      }).catch((err) => reject(err));
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+
+
+// @desc    Search user
+// @route   GET /user/search/:Key
+// @access  Registerd users
+export const userByUsernameHelper = (username) => {
+  return new Promise((resolve, reject) => {
+    try {
+      User.findOne({username: username}).select("-password")
+      .exec()
+      .then((user)=>{
+        resolve(user);
+      }).catch((err) => {
+        resolve({
+          status: 500,
+          error_code: "DB_FETCH_ERROR",
+          message: err.message
+        })
+      })
+    } catch (error) {
+      resolve({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: err.message,
+      });
+    }
+  })
+}

@@ -1,6 +1,6 @@
 //importing helpers
 import { response } from "express";
-import { addCommentHelper, createPost, deleteCommentHelper, fetchAPost, fetchCommentHelper, fetchUserPosts, getAllPosts, likePostHelper, unlikePostHelper } from "../helpers/postHelper";
+import { addCommentHelper, createPost, deleteCommentHelper, deletePostHelper, fetchAPost, fetchCommentHelper, fetchUserPosts, getAllPosts, likePostHelper, unlikePostHelper } from "../helpers/postHelper";
 
 // @desc    Create new post
 // @route   POST /post/create-post
@@ -95,6 +95,25 @@ export const ctrlFetchUserPosts = (req, res, next) => {
         res.status(500).send(error);
     }
 };
+
+// @desc    Delete post
+//@route    DELETE /post/delete/post/:postId
+// @access  Registerd users
+export const deletePost = (req, res) => {
+  try {
+    const { postId } = req.params;
+    deletePostHelper(postId)
+      .then((response) => {
+        res.status(200).send(response);
+      })
+      .catch((error) => {
+        res.status(500).send(error);
+      });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 
 
 

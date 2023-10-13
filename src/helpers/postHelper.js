@@ -128,6 +128,34 @@ export const fetchUserPosts = (userId) => {
   })
 }
 
+// @desc    Delete post
+//@route    DELETE /post/delete/post/:postId
+// @access  Registerd users
+export const deletePostHelper = (postId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Post.deleteOne({ _id: postId })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((err) => {
+          reject({
+            status: 500,
+            error_code: "DB_FETCH_ERROR",
+            message: err.message,
+            err,
+          });
+        });
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: error.message,
+        error,
+      });
+    }
+  });
+};
 
 // @desc    Like post
 //@route    FETCH /post/like-post

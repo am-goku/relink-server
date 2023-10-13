@@ -1,7 +1,7 @@
 import { json, response } from "express";
 
 //importing Helpers
-import { followHelper, getUsers, registration, removeSavePostHelper, savePostHelper, unfollowHelper, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
+import { followHelper, getConnectonHelper, getUsers, registration, removeSavePostHelper, savePostHelper, searchUserHelper, unfollowHelper, userByUsernameHelper, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
 
 
 // @desc    Login user
@@ -188,11 +188,69 @@ export const followUser = (req, res) => {
 // @access  Registerd users
 export const unfollowUser = (req, res) => {
   try {
-    const {userId, followeeUserId} = req.params;
-    unfollowHelper(userId, followeeUserId).then((response)=> {
-      res.status(200).send(response);
+    const { userId, followeeUserId } = req.params;
+    unfollowHelper(userId, followeeUserId)
+      .then((response) => {
+        res.status(200).send(response);
+      })
+      .catch((error) => {
+        res.status(500).send(error);
+      });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+// @desc    Get connections
+// @route   GET /user/fetch/connection/:userId
+// @access  Registerd users
+export const getConnection = (req, res) => {
+  try {
+    const {userId} = req.params;
+    getConnectonHelper(userId).then((connection) => {
+      res.status(200).send(connection);
+    }).catch((err) => {
+      res.status(500).send(err)
+    })
+  } catch (error) {
+    res.status(500).send(err);
+  }
+}
+
+
+
+
+
+// @desc    Search user
+// @route   GET /user/search/:Key
+// @access  Registerd users
+export const searchUser = (req, res) => {
+  try {
+    const {key} = req.params;
+    searchUserHelper(key).then((users)=> {
+      res.status(200).send(users);
+    }).catch((err) => {
+      res.status(500).send(err)
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+
+
+///////////////////////////////////////////----FETCH USER SECTION----/////////////////////////////////////////////////////////////////
+
+// @desc    Fetch user by username
+// @route   /user/fetch/user/username/:username
+// @access Authenticated users
+export const fetchUserByUsername = (req, res) => {
+  try {
+    const {username} = req.params;
+    userByUsernameHelper(username).then((user)=> {
+      res.status(200).send(user);
     }).catch((error) => {
-      res.status(500).send(error);
+      res.status(500).send(error)
     })
   } catch (error) {
     res.status(500).send(error);
