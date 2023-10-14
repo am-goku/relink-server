@@ -1,7 +1,7 @@
 import { json, response } from "express";
 
 //importing Helpers
-import { followHelper, getConnectonHelper, getUsers, registration, removeSavePostHelper, savePostHelper, searchUserHelper, unfollowHelper, userByUsernameHelper, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
+import { followHelper, getConnectonHelper, getUsers, registration, removeSavePostHelper, savePostHelper, searchUserHelper, unfollowHelper, updateUserHelper, userByUsernameHelper, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
 
 
 // @desc    Login user
@@ -251,6 +251,26 @@ export const fetchUserByUsername = (req, res) => {
       res.status(200).send(user);
     }).catch((error) => {
       res.status(500).send(error)
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+
+
+
+
+// @desc    Search user
+//route     /user/update/user/:username
+// @access  Registerd users
+export const updateUser = (req, res) => {
+  try {
+    const {username} = req.params;
+    updateUserHelper(req.body, username).then(()=> {
+      res.status(200).json(response);
+    }).catch((err)=> {
+      res.status(500).send(err);
     })
   } catch (error) {
     res.status(500).send(error);

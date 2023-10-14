@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //IMPORTING CONTROLLERS
-import {fetchUsers, login, registerUser, getUserdetails, savePost, removeSavedPost, followUser, searchUser, fetchUserByUsername, getConnection, unfollowUser,} from "../controllers/userController.js";
+import {fetchUsers, login, registerUser, getUserdetails, savePost, removeSavedPost, followUser, searchUser, fetchUserByUsername, getConnection, unfollowUser, updateUser,} from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
 
 
@@ -53,6 +53,11 @@ router.get("/fetch/connection/:userId", protect, getConnection)
 // @desc    Search user
 // @access  Registerd users
 router.get("/search/:key", searchUser)
+
+
+// @desc    Update user
+// @access  Registerd users
+router.put("/update/user/:username", protect, updateUser)
 
 
 export default router;

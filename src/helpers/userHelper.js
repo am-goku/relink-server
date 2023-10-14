@@ -445,3 +445,36 @@ export const userByUsernameHelper = (username) => {
     }
   })
 }
+
+
+
+// @desc    Search user
+//route     /user/update/user/:username
+// @access  Registerd users
+export const updateUserHelper = (data, username)=> {
+  return new Promise((resolve, reject) => {
+    try {
+      User.findOneAndUpdate({ username: username }, data, { new: true })
+        .select("-password")
+        .exec()
+        .then((user) => {
+          resolve(user);
+        })
+        .catch((err) => {
+          reject({
+            status: 500,
+            error_code: "DB_UPDATE_ERROR",
+            message: err.message,
+            err,
+          });
+        });
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: err.message,
+        err,
+      });
+    }
+  })
+}
