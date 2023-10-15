@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";  //importing bcrypt
 //importing models
 import { Admin } from "../models/adminModel";
 import { User } from "../models/userModel";
+import { Post } from "../models/postModel";
+import { response } from "express";
 
 
 
@@ -47,8 +49,22 @@ export const adminLogin = (data) => {
   }
 };
 
+
+
+
 // @desc    Fetch users
 // @access  Admins
+const userPostsBlockStatus =(userId, status) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Post.updateMany({userId: userId}, {$set: {blocked: status}}).then((res) => {
+        resolve(res)
+      }).catch((error) => reject(error))
+    } catch (error) {
+      reject(error);
+    }
+  })
+}//function to update the status of posts when the user block status updates
 export const toggelBlockStatus = (userId, status) => {
   return new Promise((resolve, reject) => {
     try {
@@ -56,11 +72,19 @@ export const toggelBlockStatus = (userId, status) => {
         .select("-password")
         .exec()
         .then((response) => {
-          resolve({
-            status: 200,
-            message: "User block status updated",
-            user: response,
-          });
+          userPostsBlockStatus(userId, status).then((res)=>{
+            resolve({
+              status: 200,
+              message: "User block status updated",
+              user: response,
+            });
+          }).catch((err) => {
+            resolve({
+              status: 500,
+              error_code: "DB_UPDATE_ERROR",
+              message: err.message,
+            });
+          })
         })
         .catch((err) => {
           resolve({

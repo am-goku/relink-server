@@ -53,11 +53,12 @@ export const createPost = ({ userId, image, description }) => {
 export const getAllPosts = () => {
   return new Promise((resolve, reject) => {
     try {
-      Post.find()
+      Post.find({blocked: false})
         .sort({ date: -1 })
         .exec()
         .then((posts) => {
           if (posts) {
+            console.log(posts, "Posts");
             resolve({
               status: 200,
               message: "post fetched successfully",

@@ -16,7 +16,7 @@ router.post('/login', adminPostLogin);
 
 // @desc    Fetch users
 // @access  Admins
-router.get('/fetch-users',protectAdmin, fetchUsers);
+router.get('/fetch-users', protectAdmin, fetchUsers);
 
 // @desc    Change block status
 // @access  Admins

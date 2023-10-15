@@ -1,7 +1,7 @@
 import { json, response } from "express";
 
 //importing Helpers
-import { followHelper, getConnectonHelper, getUsers, registration, removeSavePostHelper, savePostHelper, searchUserHelper, unfollowHelper, updateUserHelper, userByUsernameHelper, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
+import { fetchUserById, followHelper, getConnectonHelper, getUsers, registration, removeSavePostHelper, savePostHelper, searchUserHelper, unfollowHelper, updateUserHelper, userByUsernameHelper, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
 
 
 // @desc    Login user
@@ -65,23 +65,43 @@ export const registerUser = (req, res) => {
 };
 
 
+
+// @desc    Get users
+// @route   GET /user/fetch-users
+// @access  Public
+export const fetch_Users = (req, res) => {
+  try {
+    const {userId} = req.query || ''
+
+    fetchUserById(userId).then((response) => {
+      res.status(200).json(response)
+    }).catch((err) => {
+      res.status(500).json(err);
+    })
+  } catch (error) {
+    console.log("error in fetchUsers (userController)", error);
+    res.status(500).json(err);
+  }
+};
+
+
 // @desc    Get users
 // @route   GET /user/fetch-users
 // @access  Public
 export const fetchUsers = (req, res) => {
   try {
-    let query = {};
-    if(req.query?.userId){
-      query = {_id: req.query.userId}
-    }
-    getUsers(query).then((response) => {
-      res.status(200).json({...response})
-    }).catch((err) => {
-      res.status(200).json({status:500, message: 'Somethings wrong', error_code: "INTERNAL_SERVER_ERROR"});
-    })
+    const page = req.query.page || 1;
+    const perPage = req.query.perPage || 7;
+    const search = req.query.search || '';
 
+    getUsers(page, perPage, search).then((response) => {
+      res.status(200).json(response)
+    }).catch((err) => {
+      res.status(500).json(err);
+    })
   } catch (error) {
     console.log("error in fetchUsers (userController)", error);
+    res.status(500).json(err);
   }
 };
 
@@ -267,7 +287,7 @@ export const fetchUserByUsername = (req, res) => {
 export const updateUser = (req, res) => {
   try {
     const {username} = req.params;
-    updateUserHelper(req.body, username).then(()=> {
+    updateUserHelper(req.body, username).then((response)=> {
       res.status(200).json(response);
     }).catch((err)=> {
       res.status(500).send(err);

@@ -49,6 +49,11 @@ const postSchema = new Schema({
     default: false,
   },
 
+  blocked: {
+    type: Boolean,
+    default: false,
+  },
+
   deleted: {
     type: Boolean,
     default: false,

@@ -133,30 +133,64 @@ export const registration = ({ username, email, password }) => {
   }
 };
 
-// @desc    Fetch users || Fetch user
-// @route   GET /admin/users
-// @access  Public
-export const getUsers = (query) => {
-  try {
-    return new Promise((resolve, reject) => {
+export const fetchUserById = (userId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      let query = {};
+      if (userId && userId !== undefined) {
+        query = { _id: userId };
+      }
       User.find(query)
         .select("-password")
         .exec()
+        .then((user) => {
+          resolve(user);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// @desc    Fetch users || Fetch user
+// @route   GET /admin/users
+// @access  Public
+export const getUsers = (page, perPage, search) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const regex = search? new RegExp(search, "i") : /.*/;
+      console.log('its regex', regex);
+      User.find({name: regex})
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .select("-password")
+        .exec()
         .then((users) => {
-          resolve({ status: 200, message: "User fetched successfully", users });
+          console.log('users is', users);
+          resolve(users);
         })
         .catch((err) => {
           console.log("error fetching users", err);
-          resolve({
+          reject({
             status: 500,
-            message: "Something went wrong",
+            message: err.message,
             error_code: "DB_FETCH_ERROR",
+            err,
           });
         });
-    });
-  } catch (error) {
-    console.log("error getting users: " + error);
-  }
+    } catch (error) {
+      console.log("error getting users: " + error);
+      reject({
+        status: 500,
+        message: error.message,
+        error_code: "INTERNAL_SERVER_ERROR",
+        error,
+      });
+    }
+  });
 };
 
 // @desc    Sent verification link
@@ -408,7 +442,7 @@ export const searchUserHelper = (key) => {
   return new Promise((resolve, reject) => {
     try {
       const regex = new RegExp(key, 'i');
-      User.find({name: regex}).then((users)=> {
+      User.find({name: regex, blocked: false}).then((users)=> {
         resolve(users);
       }).catch((err) => reject(err));
     } catch (error) {
@@ -454,7 +488,7 @@ export const userByUsernameHelper = (username) => {
 export const updateUserHelper = (data, username)=> {
   return new Promise((resolve, reject) => {
     try {
-      User.findOneAndUpdate({ username: username }, data, { new: true })
+      User.findOneAndUpdate({ username: username }, {...data}, { new: true })
         .select("-password")
         .exec()
         .then((user) => {
