@@ -4,11 +4,15 @@ import generateJwt from "../services/jwt.js"; //imporing jwt function to generat
 
 //importing models
 import { User } from "../models/userModel.js"; //userModel
-import {verificationEmail, verifyOtpToken} from "../services/nodemailer.js";
-import { Verify } from "../models/verifyModel.js";
+import { verificationEmail, verifyOtpToken } from "../services/nodemailer.js";
 import { Post } from "../models/postModel.js";
 import { Connection } from "../models/connectionModel.js";
 
+
+
+
+
+////////////////////////////////////////////////// USER LOGIN & REGISTRATION //////////////////////////////////////////////////////////////////
 // @desc    Login user
 // @route   POST /users/login
 // @access  Public
@@ -133,6 +137,12 @@ export const registration = ({ username, email, password }) => {
   }
 };
 
+
+
+////////////////////////////////////////////////// USER FETCH //////////////////////////////////////////////////////////////////
+// @desc    Get users
+// @route   GET /user/fetch-users
+// @access  Public
 export const fetchUserById = (userId) => {
   return new Promise((resolve, reject) => {
     try {
@@ -155,47 +165,12 @@ export const fetchUserById = (userId) => {
   });
 };
 
-// @desc    Fetch users || Fetch user
-// @route   GET /admin/users
-// @access  Public
-export const getUsers = (page, perPage, search) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const regex = search? new RegExp(search, "i") : /.*/;
-      console.log('its regex', regex);
-      User.find({name: regex})
-        .skip((page - 1) * perPage)
-        .limit(perPage)
-        .select("-password")
-        .exec()
-        .then((users) => {
-          console.log('users is', users);
-          resolve(users);
-        })
-        .catch((err) => {
-          console.log("error fetching users", err);
-          reject({
-            status: 500,
-            message: err.message,
-            error_code: "DB_FETCH_ERROR",
-            err,
-          });
-        });
-    } catch (error) {
-      console.log("error getting users: " + error);
-      reject({
-        status: 500,
-        message: error.message,
-        error_code: "INTERNAL_SERVER_ERROR",
-        error,
-      });
-    }
-  });
-};
 
+
+////////////////////////////////////////////////// EMAIL VARIFICATION //////////////////////////////////////////////////////////////////
 // @desc    Sent verification link
-// @route   GET /admin/users
-// @access  Public
+// @route   GET /auth/sent-verification
+// @access  Public - Registerd users
 export const verifyEmail = (email) => {
   return new Promise((resolve, reject) => {
     try {
@@ -231,11 +206,9 @@ export const verifyEmail = (email) => {
   });
 };
 
-
-
 // @desc    Verify email
-// @route   GET /admin/users
-// @access  Public
+// @route   GET /auth/verify-otpToken
+// @access  Public - Registerd users
 export const verifyEmailToken = (email, token) => {
   return new Promise((resolve, reject) => {
     try {
@@ -279,10 +252,7 @@ export const verifyEmailToken = (email, token) => {
 
 
 
-
-
-
-
+////////////////////////////////////////////////// POST SAVE SECTION //////////////////////////////////////////////////////////////////
 // @desc    Save post
 // @route   PUT /user/:userId/save/post/:postId
 // @access  Registerd users
@@ -324,8 +294,9 @@ export const removeSavePostHelper = (userId, postId) => {
 
 
 
-///////////////////////////////////////////----CONNECTION SECTION----/////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////// CONNECTION SECTION //////////////////////////////////////////////////////////////////
+// @desc    To check valid user
+// @access  Private
 const isValidUserId = async (userId) => {
   try {
     const user = await User.findOne({_id: userId});
@@ -373,7 +344,6 @@ export const followHelper = (userId, followeeId) => {
     }
   })
 }
-
 
 // @desc    Unfollow user
 // @route   POST /user/:userId/unfollow/:followeeUserId
@@ -435,6 +405,8 @@ export const getConnectonHelper = (userId) => {
 }
 
 
+
+////////////////////////////////////////////////// FETCH USER //////////////////////////////////////////////////////////////////
 // @desc    Search user
 // @route   GET /user/search/:Key
 // @access  Registerd users
@@ -451,10 +423,8 @@ export const searchUserHelper = (key) => {
   })
 }
 
-
-
-// @desc    Search user
-// @route   GET /user/search/:Key
+// @desc    Search user by username
+// @route   GET /user/fetch/user/username/:username
 // @access  Registerd users
 export const userByUsernameHelper = (username) => {
   return new Promise((resolve, reject) => {
@@ -482,6 +452,7 @@ export const userByUsernameHelper = (username) => {
 
 
 
+////////////////////////////////////////////////// UPDATE USER //////////////////////////////////////////////////////////////////
 // @desc    Search user
 //route     /user/update/user/:username
 // @access  Registerd users

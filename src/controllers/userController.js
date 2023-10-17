@@ -1,9 +1,24 @@
-import { json, response } from "express";
-
 //importing Helpers
-import { fetchUserById, followHelper, getConnectonHelper, getUsers, registration, removeSavePostHelper, savePostHelper, searchUserHelper, unfollowHelper, updateUserHelper, userByUsernameHelper, userLogin, verifyEmail, verifyEmailToken } from "../helpers/userHelper.js";
+import {
+  fetchUserById,
+  followHelper,
+  getConnectonHelper,
+  registration,
+  removeSavePostHelper,
+  savePostHelper,
+  searchUserHelper,
+  unfollowHelper,
+  updateUserHelper,
+  userByUsernameHelper,
+  userLogin,
+  verifyEmail,
+  verifyEmailToken,
+} from "../helpers/userHelper.js";
 
 
+
+
+////////////////////////////////////////////////// USER LOGIN & REGISTRATION //////////////////////////////////////////////////////////////////
 // @desc    Login user
 // @route   POST /user/login
 // @access  Public
@@ -19,31 +34,6 @@ export const login = (req, res, next) => {
     console.log("Error while login", error);
   }
 }
-
-
-// @desc    Get username & email
-// @route   GET /user/userdetails
-// @access  Public
-export const getUserdetails = (req, res) => {
-  try {
-    getUsers({})
-      .then((response) => {
-        const usernames = [], emails = [], users = response.users;
-        users.forEach((user) => {
-          usernames.push(user.username);
-          emails.push(user.email);
-        });
-        res.status(response.status).send({status: response.status, message: response.message, usernames, emails});
-      })
-      .catch((err) => {
-        console.log("error in calling getUsers", err);
-        response.status(200).json({status:500, message:"Sometings wrong", error_code: "INTERNAL_SERVER_ERROR"})
-      });
-  } catch (error) {
-    console.log("error in getUsername", error);
-  }
-};
-
 
 // @desc    Register user data
 // @route   POST /user/register
@@ -66,6 +56,7 @@ export const registerUser = (req, res) => {
 
 
 
+////////////////////////////////////////////////// USER FETCH //////////////////////////////////////////////////////////////////
 // @desc    Get users
 // @route   GET /user/fetch-users
 // @access  Public
@@ -84,32 +75,60 @@ export const fetch_Users = (req, res) => {
   }
 };
 
-
-// @desc    Get users
-// @route   GET /user/fetch-users
-// @access  Public
-export const fetchUsers = (req, res) => {
+// @desc    Search user
+// @route   GET /user/search/:Key
+// @access  Registerd users
+export const searchUser = (req, res) => {
   try {
-    const page = req.query.page || 1;
-    const perPage = req.query.perPage || 7;
-    const search = req.query.search || '';
-
-    getUsers(page, perPage, search).then((response) => {
-      res.status(200).json(response)
+    const {key} = req.params;
+    searchUserHelper(key).then((users)=> {
+      res.status(200).send(users);
     }).catch((err) => {
-      res.status(500).json(err);
+      res.status(500).send(err)
     })
   } catch (error) {
-    console.log("error in fetchUsers (userController)", error);
-    res.status(500).json(err);
+    res.status(500).send(error);
   }
 };
 
+// @desc    Fetch user by username
+// @route   /user/fetch/user/username/:username
+// @access Authenticated users
+export const fetchUserByUsername = (req, res) => {
+  try {
+    const {username} = req.params;
+    userByUsernameHelper(username).then((user)=> {
+      res.status(200).send(user);
+    }).catch((error) => {
+      res.status(500).send(error)
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
 
 
 
+////////////////////////////////////////////////// UPDATE USER //////////////////////////////////////////////////////////////////
+// @desc    Search user
+//route     /user/update/user/:username
+// @access  Registerd users
+export const updateUser = (req, res) => {
+  try {
+    const {username} = req.params;
+    updateUserHelper(req.body, username).then((response)=> {
+      res.status(200).json(response);
+    }).catch((err)=> {
+      res.status(500).send(err);
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
 
 
+
+////////////////////////////////////////////////// EMAIL VARIFICATION //////////////////////////////////////////////////////////////////
 // @desc    To send user verification email
 // @route   GET /user/fetch-users
 // @access  Public
@@ -130,7 +149,6 @@ export const sentVerificationEmail = (req, res) => {
   }
 };
 
-
 // @desc    Verify otpToken
 // @route   GET /user/fetch-users
 // @access  Public
@@ -150,6 +168,8 @@ export const verifyOTP = (req, res, next) => {
 };
 
 
+
+////////////////////////////////////////////////// POST SAVE SECTION //////////////////////////////////////////////////////////////////
 // @desc    Save post
 // @route   PUT /user/:userId/save/post/:postId
 // @access  Registerd users
@@ -184,9 +204,7 @@ export const removeSavedPost = (req, res) => {
 
 
 
-
-///////////////////////////////////////////----CONNECTION SECTION----/////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////// CONNECTION SECTION //////////////////////////////////////////////////////////////////
 // @desc    Follow user
 // @route   POST /user/:userId/follow/:followeeUserId
 // @access  Registerd users
@@ -241,58 +259,6 @@ export const getConnection = (req, res) => {
 
 
 
-// @desc    Search user
-// @route   GET /user/search/:Key
-// @access  Registerd users
-export const searchUser = (req, res) => {
-  try {
-    const {key} = req.params;
-    searchUserHelper(key).then((users)=> {
-      res.status(200).send(users);
-    }).catch((err) => {
-      res.status(500).send(err)
-    })
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
 
 
 
-///////////////////////////////////////////----FETCH USER SECTION----/////////////////////////////////////////////////////////////////
-
-// @desc    Fetch user by username
-// @route   /user/fetch/user/username/:username
-// @access Authenticated users
-export const fetchUserByUsername = (req, res) => {
-  try {
-    const {username} = req.params;
-    userByUsernameHelper(username).then((user)=> {
-      res.status(200).send(user);
-    }).catch((error) => {
-      res.status(500).send(error)
-    })
-  } catch (error) {
-    res.status(500).send(error);
-  }
-}
-
-
-
-
-
-// @desc    Search user
-//route     /user/update/user/:username
-// @access  Registerd users
-export const updateUser = (req, res) => {
-  try {
-    const {username} = req.params;
-    updateUserHelper(req.body, username).then((response)=> {
-      res.status(200).json(response);
-    }).catch((err)=> {
-      res.status(500).send(err);
-    })
-  } catch (error) {
-    res.status(500).send(error);
-  }
-}

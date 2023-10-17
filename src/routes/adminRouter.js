@@ -2,8 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { fetchUsers } from "../controllers/userController";
-import { adminPostLogin, changeStatus } from "../controllers/adminController";
+import { adminPostLogin, changeStatus, fetchUsers } from "../controllers/adminController";
 
 //importing middleware
 import protectAdmin from "../middleware/adminAuth";
@@ -14,7 +13,7 @@ import protectAdmin from "../middleware/adminAuth";
 // @access  Admins
 router.post('/login', adminPostLogin);
 
-// @desc    Fetch users
+// @desc    Fetch users (with pagination and filter)
 // @access  Admins
 router.get('/fetch-users', protectAdmin, fetchUsers);
 

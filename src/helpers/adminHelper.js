@@ -9,7 +9,7 @@ import { response } from "express";
 
 
 
-
+////////////////////////////////////////////////// ADMIN LOGIN //////////////////////////////////////////////////////////////////
 // @desc    Login admin
 // @route   POST /admin/login
 // @access  Private
@@ -51,9 +51,48 @@ export const adminLogin = (data) => {
 
 
 
+////////////////////////////////////////////////// USER RELATED //////////////////////////////////////////////////////////////////
+// @desc    Fetch users (with pagination and filters)
+// @route   GET /admin/fetch-users
+// @access  Admin - private
+export const getUsers = (page, perPage, search) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const regex = search? new RegExp(search, "i") : /.*/;
+      console.log('its regex', regex);
+      User.find({name: regex})
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .select("-password")
+        .exec()
+        .then((users) => {
+          console.log('users is', users);
+          resolve(users);
+        })
+        .catch((err) => {
+          console.log("error fetching users", err);
+          reject({
+            status: 500,
+            message: err.message,
+            error_code: "DB_FETCH_ERROR",
+            err,
+          });
+        });
+    } catch (error) {
+      console.log("error getting users: " + error);
+      reject({
+        status: 500,
+        message: error.message,
+        error_code: "INTERNAL_SERVER_ERROR",
+        error,
+      });
+    }
+  });
+};
 
-// @desc    Fetch users
-// @access  Admins
+// @desc    Block / Unblock user with posts
+// @route   PATCH /admin/:userId/change-status
+// @access  Admin - private
 const userPostsBlockStatus =(userId, status) => {
   return new Promise((resolve, reject) => {
     try {

@@ -2,13 +2,21 @@ import { Router } from "express";
 const router = Router();
 
 //IMPORTING CONTROLLERS
-import {fetchUsers, login, registerUser, getUserdetails, savePost, removeSavedPost, followUser, searchUser, fetchUserByUsername, getConnection, unfollowUser, updateUser, fetch_Users,} from "../controllers/userController.js";
+import {
+  login,
+  registerUser,
+  savePost,
+  removeSavedPost,
+  followUser,
+  searchUser,
+  fetchUserByUsername,
+  getConnection,
+  unfollowUser,
+  updateUser,
+  fetch_Users,
+} from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
 
-
-// @desc    Fetch username && email
-// @access  Private
-router.get("/userdetails", getUserdetails);
 
 // @desc    Fetch users
 // @access  Authenticated users
