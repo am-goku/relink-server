@@ -12,6 +12,7 @@ import adminRouter from './src/routes/adminRouter.js';
 import userRouter from './src/routes/userRouter.js';
 import postRouter from './src/routes/postRouter.js';
 import authRouter from './src/routes/authRouter.js';
+import messageRouter from "./src/routes/messageRouter.js";
 import bodyParser from 'body-parser';
 
 
@@ -48,7 +49,8 @@ app.use(logger("dev")); //logger
 app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
-app.use("/api/auth", authRouter)
+app.use("/api/auth", authRouter);
+app.use("/api/messages", messageRouter);
 
 
 const port = process.env.LISTENING_PORT;
