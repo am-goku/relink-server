@@ -41,7 +41,6 @@ export const login = (req, res, next) => {
 export const registerUser = (req, res) => {
   try {
     const userData = req.body;
-    console.log(userData);
     registration(userData)
       .then((response) => {
         res.status(200).json({...response})
@@ -155,7 +154,6 @@ export const sentVerificationEmail = (req, res) => {
 export const verifyOTP = (req, res, next) => {
   try {
     const {email, otpToken} = req.body;
-    console.log(req.body);
     verifyEmailToken(email, otpToken).then((response)=> {
       res.status(200).send(response);
     }).catch((error)=> {

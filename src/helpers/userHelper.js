@@ -31,7 +31,6 @@ export const userLogin = ({ username, email, password }) => {
             bcrypt
               .compare(password, user.password)
               .then((result) => {
-                console.log(result);
                 if (result) {
                   if (!user.blocked) {
                     generateJwt(user)
@@ -351,7 +350,6 @@ export const followHelper = (userId, followeeId) => {
 export const unfollowHelper = (userId, followeeId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(userId, followeeId);
       // Validate user IDs
       if (!isValidUserId(userId) || !isValidUserId(followeeId)) {
         reject(new Error("Invalid user ID"));

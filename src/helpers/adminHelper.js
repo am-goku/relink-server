@@ -23,7 +23,6 @@ export const adminLogin = (data) => {
       ) {
         generateJwt(admin)
           .then((adminToken) => {
-            console.log(adminToken);
             resolve({
               status: 200,
               message: "Admin login successful",
@@ -59,14 +58,12 @@ export const getUsers = (page, perPage, search) => {
   return new Promise((resolve, reject) => {
     try {
       const regex = search? new RegExp(search, "i") : /.*/;
-      console.log('its regex', regex);
       User.find({name: regex})
         .skip((page - 1) * perPage)
         .limit(perPage)
         .select("-password")
         .exec()
         .then((users) => {
-          console.log('users is', users);
           resolve(users);
         })
         .catch((err) => {

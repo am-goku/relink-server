@@ -9,7 +9,6 @@ import { adminLogin, getUsers, toggelBlockStatus } from "../helpers/adminHelper"
 export const adminPostLogin = (req, res, next) => {
     try {
         const data = req.body;
-        console.log(data);
         adminLogin(data).then((response) => {
             res.status(200).json({...response});
         }).catch((error) => {

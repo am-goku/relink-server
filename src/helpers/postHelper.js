@@ -58,7 +58,6 @@ export const getAllPosts = () => {
         .exec()
         .then((posts) => {
           if (posts) {
-            console.log(posts, "Posts");
             resolve({
               status: 200,
               message: "post fetched successfully",

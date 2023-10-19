@@ -1,6 +1,6 @@
 
 
-import { chatRoomHelper, getChatHelper } from "../helpers/chatHelper"
+import { chatRoomHelper, getChatHelper, newMessageHelper } from "../helpers/chatHelper"
 
 
 
@@ -30,6 +30,24 @@ export const setChatRoom = (req, res) => {
         const {firstId, secondId} = req.params;
         chatRoomHelper([firstId, secondId]).then((chatRoom) => {
             res.status(200).send(chatRoom)
+        }).catch((error) => {
+            res.status(500).send(error);
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
+
+// @desc    Send new chat
+// @route   /messages/inbox/new-message/:roomId
+// @access  Users - private
+export const sendNewMessage = (req, res) => {
+    try {
+        const {roomId} = req.params;
+        const {senderId, textMessage} = req.body;
+        newMessageHelper(roomId, textMessage, senderId).then((response)=> {
+            res.status(200).send(response);
         }).catch((error) => {
             res.status(500).send(error);
         })

@@ -1,3 +1,4 @@
+import { response } from "express";
 import { ChatRoom } from "../models/chatRoomModel";
 import { Messages } from "../models/messageModel"
 
@@ -34,8 +35,6 @@ export const getChatHelper = (roomId) => {
   })
 }
 
-
-
 // @desc    Create or get chatRoom of two
 // @route   /messages/inbox/room/:firstId/:secondId
 // @access  Users - private
@@ -66,4 +65,32 @@ export const chatRoomHelper = (userIds) => {
             })
         }
     })
+};
+
+// @desc    Send new chat
+// @route   /messages/inbox/new-message/:roomId
+// @access  Users - private
+export const newMessageHelper = (roomId, textMessage, senderId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const newMessage = new Messages({
+        senderId: senderId,
+        roomId: roomId,
+        textMessage: textMessage
+      });
+
+      newMessage.save().then((response)=> {
+        resolve(response)
+      }).catch((err) => {
+        reject({
+          status: 500,
+          error_code: "DB_SAVE_ERROR",
+          message: "Error saving message",
+          err
+        })
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
 }

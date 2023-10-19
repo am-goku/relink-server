@@ -42,7 +42,6 @@ export const sentEmail = async (email, username, token) => {
         text: "",
         html: template // plain text body
       });
-      console.log("response in sentemail", info);
       resolve(info);
     } catch (error) {
       console.log("error in sentmail: " + error);

@@ -4,7 +4,6 @@
 export const authUser = (req, res) => {
   try {
     const user = req.user;
-    console.log(user);
     res
       .status(200)
       .json({
@@ -31,7 +30,6 @@ export const authUser = (req, res) => {
 export const authAdmin = (req, res) => {
   try {
     const admin = req.admin;
-    console.log(admin);
     res
       .status(200)
       .json({

@@ -19,7 +19,6 @@ const protectAdmin = async (req, res, next) => {
         .then((admin) => {
           if (admin) {
             req.admin = admin;
-            console.log("this is the admin",req.admin);
             next();
           } else {
             // User not found

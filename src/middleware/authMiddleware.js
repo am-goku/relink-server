@@ -10,7 +10,6 @@ import { User } from "../models/userModel";
 // @access  Private
 const protect = async (req, res, next) => {
   let token;
-  console.log(req.headers);
   if (req.headers.authorization) {
     try {
       token = req.headers.authorization;
@@ -21,7 +20,6 @@ const protect = async (req, res, next) => {
           if (user) {
             if(!user.blocked){
               req.user = user;
-              console.log(user);
               next();
             } else {
               // User has been blocked

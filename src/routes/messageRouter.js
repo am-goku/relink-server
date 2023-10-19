@@ -1,6 +1,6 @@
 import { Router } from "express";
 import protect from "../middleware/authMiddleware";
-import { getChats, setChatRoom } from "../controllers/chatController";
+import { getChats, sendNewMessage, setChatRoom } from "../controllers/chatController";
 const router = Router();
 
 
@@ -21,6 +21,9 @@ router.put("/inbox/room/:firstId/:secondId", protect, setChatRoom);
                         //@user  //@other
 
 
+// @desc    Send new chat
+// @access  Users - private
+router.post("/inbox/new-message/:roomId", protect, sendNewMessage)
 
 
 
