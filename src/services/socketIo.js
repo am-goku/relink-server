@@ -10,23 +10,16 @@ const socketIo_Config = (io) => {
             //establishing connection
             console.log('User has been connected.');
 
+            socket.on("newUser", (roomId)=> {
+                
+                socket.join(roomId);
+                console.log("recieved data in servere socket", socket.id, roomId);
 
+                socket.on("sendMessage", (roomId, message, senderId, cb)=> {
+                    console.log("newMessage from socket",roomId,message, senderId);
+                    cb(message);
 
-
-            socket.on("joinPrivateRoom", (recieverId)=> {
-
-                //uique room identifier
-                const privateRoom = `Private_${socket.id}_${recieverId}`;
-
-                //joining the private room
-                socket.join(privateRoom)
-
-
-                //listening from sender
-                socket.on("sendMessage", (message)=> {
-
-                    //broadcasting message
-                    io.to(privateRoom).emit("newPrivateMessage", message);
+                    io.to(roomId).emit("recieveMessage", message);
                 })
 
             })

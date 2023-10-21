@@ -93,4 +93,19 @@ export const newMessageHelper = (roomId, textMessage, senderId) => {
       reject(error)
     }
   })
+};
+
+// @desc    Get rooms with userID
+// @route   GET /messages/inbox/get-room/userID/:userId
+// @access  Users - private
+export const roomWithUserID = (userId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      ChatRoom.find({users: userId}).then((rooms) => {
+        resolve(rooms);
+      }).catch((err) => reject(err))
+    } catch (error) {
+      reject(error);
+    }
+  })
 }
