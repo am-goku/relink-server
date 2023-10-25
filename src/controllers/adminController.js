@@ -1,5 +1,6 @@
 //importing helpers
-import { adminLogin, getUsers, toggelBlockStatus } from "../helpers/adminHelper";
+import { response } from "express";
+import { adminLogin, getPostReportsHelper, getUserReportsHelper, getUsers, toggelBlockStatus } from "../helpers/adminHelper";
 
 
 ////////////////////////////////////////////////// ADMIN LOGIN //////////////////////////////////////////////////////////////////
@@ -61,3 +62,48 @@ export const fetchUsers = (req, res) => {
     res.status(500).json(err);
   }
 };
+
+
+
+
+
+
+/////////////////////////////////////////////////// REPORT SECTIONS //////////////////////////////////////////////////////////////////
+// @desc    Fetch user reports
+// @route   GET /admin/reports/users
+// @access  Admins
+export const getUserReports = (req, res) => {
+  try {
+    const page = req.query.page || 1;
+    const perPage = req.query.perPage || 7;
+    const search = req.query.search || '';
+
+    getUserReportsHelper(page, perPage, search).then((response)=> {
+      res.status(200).json(response);
+    }).catch((err)=> {
+      res.status(500).json(err);
+    })
+
+  } catch (error) {
+    res.status(500).json(error)
+  }
+}
+
+// @desc    Fetch post reports
+// @route   GET /admin/reports/users
+// @access  Admins
+export const getPostReports = (req, res) => {
+  try {
+    const page = req.query.page || 1;
+    const perPage = req.query.perPage || 7;
+    const search = req.query.search || '';
+
+    getPostReportsHelper(page, perPage, search).then((response)=> {
+      res.status(200).json(response);
+    }).catch((err)=> {
+      res.status(500).json(err);
+    })
+  } catch (error) {
+    res.status(500).json(error)
+  }
+}

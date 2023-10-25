@@ -7,6 +7,7 @@ import { User } from "../models/userModel.js"; //userModel
 import { verificationEmail, verifyOtpToken } from "../services/nodemailer.js";
 import { Post } from "../models/postModel.js";
 import { Connection } from "../models/connectionModel.js";
+import { Report } from "../models/reportsModel.js";
 
 
 
@@ -481,3 +482,43 @@ export const updateUserHelper = (data, username)=> {
     }
   })
 }
+
+
+
+
+////////////////////////////////////////////////// REPORT SECTION //////////////////////////////////////////////////////////////////
+
+// @desc    Report user
+// @route   POST /user/report/user/:userId
+// @access  Registerd users
+export const reportUserHelper = (userId, username, targetId, details) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const newReport = new Report({
+        reporterId: userId,
+        targetId: targetId,
+        details: details,
+        reportType: "UserReport",
+        reporterUsername: username,
+      });
+
+      newReport.save().then((response) => {
+        resolve(response);
+      }).catch((err)=> {
+        reject({
+          status: 500,
+          error_code: "DB_FETCH_ERROR",
+          message: "Error saving to DB",
+          err
+        })
+      })
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Server side error",
+        error,
+      });
+    }
+  })
+};

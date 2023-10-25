@@ -6,6 +6,7 @@ import { Admin } from "../models/adminModel";
 import { User } from "../models/userModel";
 import { Post } from "../models/postModel";
 import { response } from "express";
+import { Report } from "../models/reportsModel";
 
 
 
@@ -137,4 +138,68 @@ export const toggelBlockStatus = (userId, status) => {
       });
     }
   });
+};
+
+
+
+
+/////////////////////////////////////////////////// REPORT SECTIONS //////////////////////////////////////////////////////////////////
+// @desc    Fetch user reports
+// @route   GET /admin/reports/users
+// @access  Admins
+export const getUserReportsHelper = (page, perPage, search) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const regex = search ? new RegExp(search, "i") : /.*/;
+      Report.find({ reporterUsername: regex })
+        .skip((page - 1) * perPage)
+        .limit(perPage).then((reports) => {
+          resolve(reports);
+        }).catch((err) =>{
+          reject({
+            status: 500,
+            error_code: "DB_FETCH_ERROR",
+            message: "Error fetching DB",
+            err
+          })
+        })
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+        error,
+      });
+    }
+  })
+};
+
+// @desc    Fetch post reports
+// @route   GET /admin/reports/users
+// @access  Admins
+export const getPostReportsHelper = (page, perPage, search) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const regex = search ? new RegExp(search, "i") : /.*/;
+      Report.find({ reporterUsername: regex })
+        .skip((page - 1) * perPage)
+        .limit(perPage).then((reports) => {
+          resolve(reports);
+        }).catch((err) =>{
+          reject({
+            status: 500,
+            error_code: "DB_FETCH_ERROR",
+            message: "Error fetching DB",
+            err
+          })
+        })
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+        error,
+      });
+    }
+  })
 };

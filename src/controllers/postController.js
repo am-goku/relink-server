@@ -1,6 +1,6 @@
 //importing helpers
 import { response } from "express";
-import { addCommentHelper, createPost, deleteCommentHelper, deletePostHelper, fetchAPost, fetchCommentHelper, fetchUserPosts, getAllPosts, likePostHelper, unlikePostHelper } from "../helpers/postHelper";
+import { addCommentHelper, createPost, deleteCommentHelper, deletePostHelper, fetchAPost, fetchCommentHelper, fetchUserPosts, getAllPosts, getPostsCount, likePostHelper, reportPostHelper, unlikePostHelper } from "../helpers/postHelper";
 
 // @desc    Create new post
 // @route   POST /post/create-post
@@ -55,9 +55,9 @@ export const fetchSinglePost = (req, res) => {
 // @access  Public
 export const fetchAllPosts = (req, res) => {
     try{
-        
-        getAllPosts().then((response)=>{
-            res.status(response.status).json({...response});
+        const perPage = 5, page = req.query.page || 1;
+        getAllPosts(perPage, page).then((response)=>{
+            res.status(response.status).json(response);
         }).catch((error)=>{
             res
               .status(500)
@@ -77,6 +77,21 @@ export const fetchAllPosts = (req, res) => {
         });
     }
 };
+
+// @desc    Fetch posts count
+// @route   GET /post/fetch-count
+// @access  Private
+export const getPostsCountController = (req, res) => {
+    try {
+        getPostsCount().then((count)=> {
+            res.status(200).send(count);
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
 
 
 
@@ -197,4 +212,25 @@ export const fetchComment = (req, res) => {
     } catch (error) {
         res.status(500).send(error);
     }
+};
+
+
+
+////////////////////////////////////////////////// REPORT SECTION //////////////////////////////////////////////////////////////////
+
+// @desc    Report user
+// @route   POST /post/report/post/:userId
+// @access  Registerd users
+export const reportPost = (req, res) => {
+  try {
+    const {userId, username} = req.params;
+    const {targetId, details} = req.body;
+    reportPostHelper(userId, username, targetId, details).then((response)=> {
+      res.status(200).send(response)
+    }).catch((err)=> {
+      res.status(500).send(err)
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
 }

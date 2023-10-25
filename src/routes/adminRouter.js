@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { adminPostLogin, changeStatus, fetchUsers } from "../controllers/adminController";
+import { adminPostLogin, changeStatus, fetchUsers, getPostReports, getUserReports } from "../controllers/adminController";
 
 //importing middleware
 import protectAdmin from "../middleware/adminAuth";
@@ -24,7 +24,12 @@ router.patch('/:userId/change-status', protectAdmin, changeStatus);
 
 
 
-
+// @desc    Fetch user reports
+// @access  Admins
+router.get('/reports/users', protectAdmin, getUserReports)
+// @desc    Fetch post reports
+// @access  Admins
+router.get("/reports/posts", protectAdmin , getPostReports)
 
 
 

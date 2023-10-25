@@ -1,6 +1,7 @@
 //importing models
 import { Comment } from "../models/commentModel";
 import { Post } from "../models/postModel";
+import { Report } from "../models/reportsModel";
 
 // @desc    Create post
 // @route   POST /users/create-post
@@ -50,11 +51,13 @@ export const createPost = ({ userId, image, description }) => {
 // @desc    Fetch posts
 // @route   POST /users/fetch-posts
 // @access  Public
-export const getAllPosts = () => {
+export const getAllPosts = (perPage, page) => {
   return new Promise((resolve, reject) => {
     try {
-      Post.find({blocked: false})
-        .sort({ date: -1 })
+      Post.find({ blocked: false })
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .sort({ createdAt: -1 })
         .exec()
         .then((posts) => {
           if (posts) {
@@ -72,7 +75,7 @@ export const getAllPosts = () => {
             status: 500,
             error_code: "DB_FETCH_ERROR",
             message: "Somethings wrong, Please try again later.",
-            error_message: err.message
+            error_message: err.message,
           });
         });
     } catch (error) {
@@ -87,7 +90,22 @@ export const getAllPosts = () => {
 };
 
 
-
+// @desc    Fetch posts count
+// @route   GET /post/fetch-count
+// @access  Private
+export const getPostsCount = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      Post.countDocuments({}).then((count) => {
+        resolve(count);
+      }).catch((err)=> {
+        reject(err)
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
 
 // @desc    Fetch single posts
 // @route   GET /post/fetch-single-post
@@ -246,3 +264,41 @@ export const fetchCommentHelper = (postId) => {
     }
   });
 };
+
+
+
+////////////////////////////////////////////////// REPORT SECTION //////////////////////////////////////////////////////////////////
+// @desc    Report post
+// @route   POST /post/report/post/:userId
+// @access  Registerd users
+export const reportPostHelper = (userId, username, targetId, details) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const newReport = new Report({
+        reporterId: userId,
+        targetId: targetId,
+        details: details,
+        reportType: "UserReport",
+        reporterUsername: username
+      });
+
+      newReport.save().then((response) => {
+        resolve(response);
+      }).catch((err)=> {
+        reject({
+          status: 500,
+          error_code: "DB_FETCH_ERROR",
+          message: "Error saving to DB",
+          err
+        })
+      })
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Server side error",
+        error,
+      });
+    }
+  })
+}

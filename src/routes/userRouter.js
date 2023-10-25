@@ -14,6 +14,7 @@ import {
   unfollowUser,
   updateUser,
   fetch_Users,
+  reportUser,
 } from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
 
@@ -66,6 +67,11 @@ router.get("/search/:key", searchUser)
 // @desc    Update user
 // @access  Registerd users
 router.put("/update/user/:username", protect, updateUser)
+
+
+// @desc    Report user
+// @access  Registerd users
+router.post("/report/user/:userId/:username", protect, reportUser)
 
 
 export default router;

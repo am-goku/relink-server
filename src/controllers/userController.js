@@ -5,6 +5,7 @@ import {
   getConnectonHelper,
   registration,
   removeSavePostHelper,
+  reportUserHelper,
   savePostHelper,
   searchUserHelper,
   unfollowHelper,
@@ -14,6 +15,7 @@ import {
   verifyEmail,
   verifyEmailToken,
 } from "../helpers/userHelper.js";
+import router from "../routes/postRouter.js";
 
 
 
@@ -175,7 +177,7 @@ export const savePost = (req, res) => {
   try {
     const {userId, postId} = req.params;
     savePostHelper(userId, postId).then((response) => {
-      res.status(200).send(response);
+      res.status(200).json(response);
     }).catch((error) => {
       res.status(500).send(error);
     })
@@ -191,7 +193,7 @@ export const removeSavedPost = (req, res) => {
   try {
     const { userId, postId } = req.params;
     removeSavePostHelper(userId, postId).then((response)=> {
-      res.status(200).send(response);
+      res.status(200).json(response);
     }).catch((error) => {
       res.status(500).send(error);
     })
@@ -251,11 +253,29 @@ export const getConnection = (req, res) => {
   } catch (error) {
     res.status(500).send(err);
   }
+};
+
+
+
+
+////////////////////////////////////////////////// REPORT SECTION //////////////////////////////////////////////////////////////////
+
+// @desc    Report user
+// @route   GET /user/report/user/:userId
+// @access  Registerd users
+export const reportUser = (req, res) => {
+  try {
+    const {userId, username} = req.params;
+    const {targetId, details} = req.body;
+    reportUserHelper(userId, username, targetId, details).then((response)=> {
+      res.status(200).send(response)
+    }).catch((err)=> {
+      res.status(500).send(err)
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
 }
-
-
-
-
 
 
 
