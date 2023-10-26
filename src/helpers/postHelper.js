@@ -155,6 +155,7 @@ export const deletePostHelper = (postId) => {
       Post.deleteOne({ _id: postId })
         .then((response) => {
           resolve(response);
+          console.log(response);
         })
         .catch((err) => {
           reject({
