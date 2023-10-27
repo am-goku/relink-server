@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { adminPostLogin, changeStatus, fetchUsers, getPostReports, getUserReports } from "../controllers/adminController";
+import { adminPostLogin, changeStatus, fetchPosts, fetchUsers, getPostReports, getUserReports } from "../controllers/adminController";
 
 //importing middleware
 import protectAdmin from "../middleware/adminAuth";
@@ -30,6 +30,13 @@ router.get('/reports/users', protectAdmin, getUserReports)
 // @desc    Fetch post reports
 // @access  Admins
 router.get("/reports/posts", protectAdmin , getPostReports)
+
+
+
+
+// @desc    Fetch posts with pagination and populated user
+// @access  Admins
+router.get('/fetch-posts', protectAdmin, fetchPosts);
 
 
 

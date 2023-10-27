@@ -203,3 +203,51 @@ export const getPostReportsHelper = (page, perPage, search) => {
     }
   })
 };
+
+
+
+// @desc    Fetch posts with pagination and populated user
+// @route   GET /admin/fetch-posts
+// @access  Admins
+export const fetchPostsHelper = (page, perPage, search) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const regex = search ? new RegExp(search, "i") : /.*/;
+      const populateOptions = [
+        {
+          $lookup: { from: "users", localField: "userId", foreignField: "_id", as: "user" }
+        }
+      ];
+      if(search){
+        populateOptions.push({$match: {"user.username":regex}})
+      }
+
+      populateOptions.push(
+        { $skip: (page - 1) * perPage },
+        { $limit: perPage }
+      );
+      
+      Post.aggregate(populateOptions).exec()
+        .then((results) => {
+          resolve(results);
+        })
+        .catch((err) => {
+          console.log(err);
+          reject({
+            status: 500,
+            error_code: "DB_FETCH_ERROR",
+            message: "Error fetching DB",
+            err,
+          });
+        });
+    } catch (error) {
+      console.log(error);
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+        error,
+      });
+    }
+  })
+}

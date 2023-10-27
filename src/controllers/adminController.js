@@ -1,6 +1,6 @@
 //importing helpers
 import { response } from "express";
-import { adminLogin, getPostReportsHelper, getUserReportsHelper, getUsers, toggelBlockStatus } from "../helpers/adminHelper";
+import { adminLogin, fetchPostsHelper, getPostReportsHelper, getUserReportsHelper, getUsers, toggelBlockStatus } from "../helpers/adminHelper";
 
 
 ////////////////////////////////////////////////// ADMIN LOGIN //////////////////////////////////////////////////////////////////
@@ -97,7 +97,6 @@ export const getPostReports = (req, res) => {
     const page = req.query.page || 1;
     const perPage = req.query.perPage || 7;
     const search = req.query.search || '';
-
     getPostReportsHelper(page, perPage, search).then((response)=> {
       res.status(200).json(response);
     }).catch((err)=> {
@@ -105,5 +104,26 @@ export const getPostReports = (req, res) => {
     })
   } catch (error) {
     res.status(500).json(error)
+  }
+}
+
+
+
+// @desc    Fetch posts with pagination and populated user
+// @route   GET /admin/fetch-posts
+// @access  Admins
+export const fetchPosts = (req, res) => {
+  try {
+    const page = +req.query.page || 1;
+    const perPage = +req.query.perPage || 7;
+    const search = req.query.search.trim() || '';
+    fetchPostsHelper(page, perPage, search).then((response) => {
+      console.log(response[0]);
+      res.status(200).json(response);
+    }).catch((err)=> {
+      res.status(500).json(err);
+    })
+  } catch (error) {
+    res.status(500).json(error);
   }
 }
