@@ -41,7 +41,7 @@ cloudinaryConfig();
 
 //settingup corse options
 const corsOption = {
-    origin: 'http://localhost:3000',
+    origin: '*',
 }
 //middlewares
 app.use(express.json());
