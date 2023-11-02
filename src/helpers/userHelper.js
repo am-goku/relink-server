@@ -8,6 +8,8 @@ import { verificationEmail, verifyOtpToken } from "../services/nodemailer.js";
 import { Post } from "../models/postModel.js";
 import { Connection } from "../models/connectionModel.js";
 import { Report } from "../models/reportsModel.js";
+import { notifyFollow } from "./notificationHelper.js";
+import { response } from "express";
 
 
 
@@ -330,6 +332,10 @@ export const followHelper = (userId, followeeId) => {
             { upsert: true, new: true }
           ).exec()
             .then((followeeConnection) => {
+
+              //notifying the follow event
+              notifyFollow(followeeId, userId);
+
               resolve({ userConnection, followeeConnection });
             })
             .catch((error) => {
@@ -522,3 +528,19 @@ export const reportUserHelper = (userId, username, targetId, details) => {
     }
   })
 };
+
+
+
+
+// @desc    Register fcm
+// @route   GET /user/fcm/:userId/:fcmToken
+// @access  Registerd users
+export const registerFcmHelper = (userId, fcmToken) => {
+  return new Promise((resolve, reject) => {
+    User.findOneAndUpdate({_id: userId}, {fcmToken: fcmToken}).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error);
+    })
+  })
+}

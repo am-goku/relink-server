@@ -15,8 +15,10 @@ import {
   updateUser,
   fetch_Users,
   reportUser,
+  registerFcmToken,
 } from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
+import { sendNotification } from "../services/notify.js";
 
 
 // @desc    Fetch users
@@ -72,6 +74,37 @@ router.put("/update/user/:username", protect, updateUser)
 // @desc    Report user
 // @access  Registerd users
 router.post("/report/user/:userId/:username", protect, reportUser)
+
+
+// @desc    Register fcm
+// @access  Registerd users
+router.post("/fcm/:userId/:fcmToken", protect, registerFcmToken);
+
+
+
+
+//testing
+
+router.get("/testNotification", async (req, res, next) => {
+  try {
+    const data = {
+      title: "Test Notification",
+      data: "sample data"
+    }
+    const token =
+      "euEn_1SVArex6mwaf1Ntr8:APA91bEOfRbkPl9U8fO80GQdWSD9HBNod2hOOxfWciFT8FZnyjKdUbVorTTyZuoOCTz_ZWSst-T-i-TXXcEAKURGhBapbNO6_G8lFM-pJlT5gtlGueOH-Ikd4leGtNGUdSGTWKdL5Upf";
+    sendNotification(token, data).then((response) => {
+      res.status(200).send(response);
+    }).catch((error) => {
+      res.status(200).send(error);
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
+
+
 
 
 export default router;

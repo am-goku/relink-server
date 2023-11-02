@@ -3,6 +3,7 @@ import {
   fetchUserById,
   followHelper,
   getConnectonHelper,
+  registerFcmHelper,
   registration,
   removeSavePostHelper,
   reportUserHelper,
@@ -15,7 +16,6 @@ import {
   verifyEmail,
   verifyEmailToken,
 } from "../helpers/userHelper.js";
-import router from "../routes/postRouter.js";
 
 
 
@@ -279,3 +279,19 @@ export const reportUser = (req, res) => {
 
 
 
+// @desc    Register fcm
+// @route   GET /user/fcm/:userId/:fcmToken
+// @access  Registerd users
+export const registerFcmToken = (req, res) => {
+  try {
+    const {userId, fcmToken} = req.params;
+    
+    registerFcmHelper(userId, fcmToken).then((response)=> {
+      res.status(200).send(response);
+    }).catch((err)=>{
+      res.status(500).send(err)
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+}

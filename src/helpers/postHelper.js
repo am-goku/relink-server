@@ -2,6 +2,9 @@
 import { Comment } from "../models/commentModel";
 import { Post } from "../models/postModel";
 import { Report } from "../models/reportsModel";
+import { notifyLike } from "./notificationHelper";
+
+import { ObjectId } from "mongoose";
 
 // @desc    Create post
 // @route   POST /users/create-post
@@ -183,6 +186,13 @@ export const likePostHelper = (userId, postId) => {
   return new Promise((resolve, reject) => {
     try {
       Post.findOneAndUpdate({_id: postId}, {$push: {likes: userId }}, {new: true}).then((response)=> {
+        //notifying the like event
+        if (new ObjectId(userId) !== response?.userId) {
+          notifyLike(response?.userId, userId, postId);
+        }
+        console.log(userId);
+        console.log(response);
+        
         resolve(response)
       }).catch((error) => reject(error));
     } catch (error) {

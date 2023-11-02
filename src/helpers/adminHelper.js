@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";  //importing bcrypt
 import { Admin } from "../models/adminModel";
 import { User } from "../models/userModel";
 import { Post } from "../models/postModel";
-import { response } from "express";
 import { Report } from "../models/reportsModel";
 
 

@@ -2,5 +2,7 @@ node_modules
 
 .env
 
+relink-app-firebase-adminsdk-8rjyx-d07c6acd86.json
+
 test.rest
 tester.js

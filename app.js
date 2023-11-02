@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import logger from 'morgan'
+import logger from 'morgan';
+import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import { Server } from 'socket.io';
 
@@ -17,8 +18,8 @@ import userRouter from './src/routes/userRouter.js';
 import postRouter from './src/routes/postRouter.js';
 import authRouter from './src/routes/authRouter.js';
 import messageRouter from "./src/routes/messageRouter.js";
-import bodyParser from 'body-parser';
 import socketIo_Config from './src/services/socketIo.js';
+import { messaging } from './src/utils/firebaseInit.js';
 
 
 const app = express();
@@ -54,6 +55,9 @@ app.use(logger("dev")); //logger
 
 //socket connection 
 socketIo_Config(io);
+
+
+// console.log(messaging);
 
 
 //settingup router paths
