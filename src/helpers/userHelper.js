@@ -9,7 +9,6 @@ import { Post } from "../models/postModel.js";
 import { Connection } from "../models/connectionModel.js";
 import { Report } from "../models/reportsModel.js";
 import { notifyFollow } from "./notificationHelper.js";
-import { response } from "express";
 
 
 
@@ -37,11 +36,11 @@ export const userLogin = ({ username, email, password }) => {
                 if (result) {
                   if (!user.blocked) {
                     generateJwt(user)
-                      .then((token) => {
+                      .then((tokens) => {
                         resolve({
                           status: 200,
                           message: "Login successful",
-                          token,
+                          tokens,
                           user
                         });
                       })
@@ -218,11 +217,11 @@ export const verifyEmailToken = (email, token) => {
           User.findOne({email: email}).then((user)=> {
             if (!user.blocked) {
               generateJwt(user)
-                .then((jwtToken) => {
+                .then((jwtTokens) => {
                   resolve({
                     status: 200,
                     message: "Login successful",
-                    token: jwtToken,
+                    tokens: jwtTokens,
                     user,
                     valid: true
                   });
@@ -537,10 +536,34 @@ export const reportUserHelper = (userId, username, targetId, details) => {
 // @access  Registerd users
 export const registerFcmHelper = (userId, fcmToken) => {
   return new Promise((resolve, reject) => {
-    User.findOneAndUpdate({_id: userId}, {fcmToken: fcmToken}).then((response) => {
-      resolve(response)
-    }).catch((error) => {
-      reject(error);
-    })
+    User.updateMany(
+      { fcmToken: fcmToken, _id: { $ne: userId } },
+      { $set: { fcmToken: "" } }
+    )
+      .then((res) => {
+        console.log("final updates", res);
+        User.findOneAndUpdate({ _id: userId }, { fcmToken: fcmToken })
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  })
+}
+
+
+
+// @desc    To delete the fcm from user
+// @access  Private
+export const removeFcmToken = (userId) => {
+  return new Promise((resolve, reject) => {
+    User.updateOne({_id: userId}, {$unset: {fcmToken: 1}}).then(() => {
+      resolve(true);
+    }).catch(err => reject(err));
   })
 }

@@ -7,24 +7,33 @@ import { ObjectId } from "mongoose";
 
 // when a user likes a post \\
 
-export const notifyLike = (userId, fromId, postId) => {
+export const notifyLike = (post, fromId) => {
     return new Promise(async (resolve, reject) => {
 
         const likedUser = await fetchUserById(fromId);
+        const currentUser = await fetchUserById(post?.userId)
 
-        console.log("liked user: " , likedUser);
+        if(likedUser[0]?.username === currentUser[0]?.username){
+            console.log(likedUser[0]?.username === currentUser[0]?.username);
+            resolve(false);
+        } else {
+            console.log("liked user: ", likedUser);
 
-        const newNotification = new Notifications({
-            userId: userId,
-            from: fromId,
-            postId: postId,
-            message: `${likedUser[0]?.username} liked your post.`
-        });
+            const newNotification = new Notifications({
+              userId: currentUser[0]?._id,
+              from: fromId,
+              postId: post?._id,
+              message: `liked your post.`,
+            });
 
-        newNotification.save().then((response) => {
-            sendNotification(userId, response)
-            resolve(response)
-        }).catch((err) => reject(err));
+            newNotification
+              .save()
+              .then((response) => {
+                sendNotification(currentUser[0]?._id, response);
+                resolve(response);
+              })
+              .catch((err) => reject(err));
+        }        
     })
 };
 
@@ -33,20 +42,29 @@ export const notifyLike = (userId, fromId, postId) => {
 // when a user follows another user \\
 
 export const notifyFollow = (userId, fromId) => {
-    return new Promise(async (resolve, reject) => {
-        const followedUser = await fetchUserById(fromId);
+  return new Promise(async (resolve, reject) => {
+    const followedUser = await fetchUserById(fromId);
 
-        const newNotification = new Notifications({
-            userId: userId,
-            from: fromId,
-            message: `${followedUser?.username} started following you.`
+    const currentUser = await fetchUserById(userId);
+
+    if (currentUser[0]?.username === followedUser[0]?.username) {
+      resolve(false);
+    } else {
+      const newNotification = new Notifications({
+        userId: userId,
+        from: fromId,
+        message: `started following you.`,
+      });
+
+      newNotification
+        .save()
+        .then((response) => {
+          sendNotification(userId, response);
+          resolve(response);
         })
-        
-        newNotification.save().then((response)=> {
-            sendNotification(userId, response)
-            resolve(response)
-        }).catch((err) => reject(err))
-    })
+        .catch((err) => reject(err));
+    }
+  });
 };
 
 
@@ -72,33 +90,38 @@ export const notifyPostBlock = (userId, postId) => {
 
 
 
-// to set change the read status \\
-
-export const readNotification = (userId, notifyId) => {
+// @desc    Read notifications
+// @route   PATCH /user/notifications/read/:notificationId
+// @access  Registerd users
+export const readNotification = (notifyId) => {
     return new Promise((resolve, reject) => {
-        Notifications.findOneAndUpdate({userId: userId, notifyId: notifyId}).then((response) => {
+        Notifications.findOneAndUpdate({_id: notifyId}, {isRead: true}).then((response) => {
             resolve(response);
         }).catch((err)=> reject(err))
     })
 };
 
 
-// to clear all notifications \\
-
+// @desc    Delete notification
+// @route   DELETE /user/notifications/delete/:userId
+// @access  Registerd users
 export const clearNotifications = (userId) => {
     return new Promise((resolve, reject) => {
         Notifications.deleteMany({userId: userId}).then((response) => {
+            console.log(response);
             resolve(response);
         }).catch((err)=> reject(err))
     })
 };
 
 
-// to get all notifications \\
 
+// @desc    Fetch notifications
+// @route   /user/:userId/notifications
+// @access  Registerd users
 export const fetchNotifications = (userId) => {
     return new Promise((resolve, reject) => {
-        Notifications.findOne({userId: userId}).then((response) => {
+        Notifications.find({userId: userId}).sort({createdAt: -1}).then((response) => {
             resolve(response);
         }).catch((err)=>reject(err))
     })

@@ -1,6 +1,6 @@
 //importing helpers
 import { response } from "express";
-import { addCommentHelper, createPost, deleteCommentHelper, deletePostHelper, fetchAPost, fetchCommentHelper, fetchUserPosts, getAllPosts, getPostsCount, likePostHelper, reportPostHelper, unlikePostHelper } from "../helpers/postHelper";
+import { addCommentHelper, createPost, deleteCommentHelper, deletePostHelper, fetchAPost, fetchCommentHelper, fetchUserPosts, getAllPosts, getPostsCount, likePostHelper, reportPostHelper, unlikePostHelper, updatePostHelper } from "../helpers/postHelper";
 
 // @desc    Create new post
 // @route   POST /post/create-post
@@ -90,6 +90,24 @@ export const getPostsCountController = (req, res) => {
         })
     } catch (error) {
         res.status(500).json(error);
+    }
+}
+
+
+// @desc    update post
+// @route   PUT /post/update-post/:postId
+// @access  registed user
+export const updatePost = (req, res) => {
+    try {
+        const {postId} = req.params;
+        const {caption} = req.body;
+        updatePostHelper(postId, caption).then((response) => {
+            res.status(200).send(response);
+        }).catch((err) => {
+            res.status(500).send(err)
+        })
+    } catch (error) {
+        res.status(500).send(error);
     }
 }
 

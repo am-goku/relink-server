@@ -16,9 +16,12 @@ import {
   fetch_Users,
   reportUser,
   registerFcmToken,
+  logout,
 } from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
 import { sendNotification } from "../services/notify.js";
+import { deleteNotification, fetch_notifications } from "../controllers/notificationController.js";
+import { removeFcmToken } from "../helpers/userHelper.js";
 
 
 // @desc    Fetch users
@@ -78,30 +81,28 @@ router.post("/report/user/:userId/:username", protect, reportUser)
 
 // @desc    Register fcm
 // @access  Registerd users
-router.post("/fcm/:userId/:fcmToken", protect, registerFcmToken);
+router.post("/fcm/:userId/:fcmToken", registerFcmToken);
+
+// @desc    Fetch notifications
+// @access  Registerd users
+router.get("/:userId/notifications", protect, fetch_notifications)
+
+// @desc    Read notifications
+// @access  Registerd users
+router.patch("/notifications/read/:notificationId", protect, fetch_notifications);
+
+// @desc    Delete notification
+// @access  Registerd users
+router.delete("/notifications/delete/:userId", protect, deleteNotification)
 
 
 
 
-//testing
+// @desc    Logout user
+// @access  Registerd users
+router.post("/logout/:userId", logout)
 
-router.get("/testNotification", async (req, res, next) => {
-  try {
-    const data = {
-      title: "Test Notification",
-      data: "sample data"
-    }
-    const token =
-      "euEn_1SVArex6mwaf1Ntr8:APA91bEOfRbkPl9U8fO80GQdWSD9HBNod2hOOxfWciFT8FZnyjKdUbVorTTyZuoOCTz_ZWSst-T-i-TXXcEAKURGhBapbNO6_G8lFM-pJlT5gtlGueOH-Ikd4leGtNGUdSGTWKdL5Upf";
-    sendNotification(token, data).then((response) => {
-      res.status(200).send(response);
-    }).catch((error) => {
-      res.status(200).send(error);
-    })
-  } catch (error) {
-    res.status(500).send(error)
-  }
-})
+
 
 
 

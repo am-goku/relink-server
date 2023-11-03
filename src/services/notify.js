@@ -8,43 +8,31 @@ export const sendNotification = (userId, message, misc = {}) => {
     try {
       const user = await fetchUserById(userId);
 
-      
       const token = user[0].fcmToken;
 
       console.log(message);
 
       const newData = JSON.stringify(message);
 
-      const topic = "notify";
       const notification = {
         data: {
           newData
         },
-        topic,
+        token: token
       };
 
-      messaging
-        .subscribeToTopic(token, topic)
-        .then((response) => {
-          console.log("Successfully subscribed to topic:", response);
-          messaging
-            .send(notification)
-            .then((response) => {
-              // Response is a message ID string.
-              console.log("Successfully sent message:", response);
-            })
-            .catch((error) => {
-              console.log("Error sending message:", error);
-              reject(error);
-            });
-        })
-        .catch((error) => {
-          console.log("Error subscribing to topic:", error);
-        }).finally(()=> {
-          messaging.unsubscribeFromTopic(token, topic).then((res)=> {
-            resolve(res);
+      if (token) {
+        messaging
+          .send(notification)
+          .then((response) => {
+            // Response is a message ID string.
+            console.log("Successfully sent message:", response);
           })
-        })
+          .catch((error) => {
+            console.log("Error sending message:", error);
+            reject(error);
+          });
+      }
     } catch (error) {
       reject(error);
     }

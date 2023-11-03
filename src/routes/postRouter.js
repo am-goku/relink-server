@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { addComment, createNewPost, ctrlFetchUserPosts, deleteComment, deletePost, fetchAllPosts, fetchComment, fetchSinglePost, getPostsCountController, likePost, reportPost, unlikePost } from "../controllers/postController";
+import { addComment, createNewPost, ctrlFetchUserPosts, deleteComment, deletePost, fetchAllPosts, fetchComment, fetchSinglePost, getPostsCountController, likePost, reportPost, unlikePost, updatePost } from "../controllers/postController";
 
 //importing middleware
 import protect from "../middleware/authMiddleware";
@@ -17,6 +17,10 @@ router.post('/create-post', protect, createNewPost);
 // @desc    Fetch posts
 // @access  Authenticated user
 router.get('/fetch-posts', protect, fetchAllPosts);
+
+// @desc    update posts
+// @access  Authenticated user
+router.put('/update-post/:postId', protect, updatePost)
 
 // @desc    Fetch posts count
 // @access  Private

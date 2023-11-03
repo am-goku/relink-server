@@ -4,7 +4,6 @@ import { Post } from "../models/postModel";
 import { Report } from "../models/reportsModel";
 import { notifyLike } from "./notificationHelper";
 
-import { ObjectId } from "mongoose";
 
 // @desc    Create post
 // @route   POST /users/create-post
@@ -128,7 +127,16 @@ export const fetchAPost = (postId) => {
 }
 
 
-
+// @desc    update post
+// @route   PUT /post/update-post/:postId
+// @access  registed user
+export const updatePostHelper = (postId, caption) => {
+  return new Promise((resolve, reject) => {
+    Post.findOneAndUpdate({_id: postId}, {description: caption}, {new: true}).then(res => {
+      resolve(res);
+    }).catch(err => reject(err));
+  })  
+}
 
 
 
@@ -185,11 +193,9 @@ export const deletePostHelper = (postId) => {
 export const likePostHelper = (userId, postId) => {
   return new Promise((resolve, reject) => {
     try {
-      Post.findOneAndUpdate({_id: postId}, {$push: {likes: userId }}, {new: true}).then((response)=> {
+      Post.findOneAndUpdate({_id: postId}, {$push: {likes: userId }}, {new: true}).then(async (response)=> {
         //notifying the like event
-        if (new ObjectId(userId) !== response?.userId) {
-          notifyLike(response?.userId, userId, postId);
-        }
+        await notifyLike(response, userId);
         console.log(userId);
         console.log(response);
         

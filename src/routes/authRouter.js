@@ -6,7 +6,7 @@ import { authAdmin, authUser } from "../controllers/authController";
 
 //importing middleware
 import protectAdmin from "../middleware/adminAuth";
-import protect from "../middleware/authMiddleware";
+import protect, { refreshAccessToken } from "../middleware/authMiddleware";
 import { sentVerificationEmail, verifyOTP } from "../controllers/userController";
 
 
@@ -15,8 +15,22 @@ import { sentVerificationEmail, verifyOTP } from "../controllers/userController"
 router.get('/user', protect,  authUser);
 
 // @desc    Admin authentication
-// @access  Private
+// @access  Private-admin
 router.get('/admin', protectAdmin, authAdmin);
+
+
+
+
+// @desc    Renew user access token
+// @access  Private
+router.post('/user/refresh-token', refreshAccessToken);
+
+// @desc    Renew admin access token
+// @access  Private- admin
+router.post('/admin/refresh-token', protectAdmin);
+
+
+
 
 
 // @desc    Sent email verification

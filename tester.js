@@ -1,32 +1,21 @@
-import jwt from "jsonwebtoken";
-
-
-const data = {
-  userId: "65153f2737de4c657ee57072",
-  username: "goku",
-  email: "goku@mail.com"
+const binary = (a, low,  high, item) => {
+    const mid = Math.floor((low+high) / 2);
+        if(low <= mid && high >= mid){
+            if (a[mid] === item) {
+              return mid;
+            } else if (a[mid] > item) {
+              return binary(a, low, mid-1, item);
+            } else if (a[mid] < item) {
+              return binary(a, mid+1, high, item);
+            }
+        } else {
+            return -1
+        }
 };
 
-const secret = "abc123";
 
-const options = {
-    expiresIn: "1d"
-}
+const a = [1, 2, 3, 4, 5, 6, 7, 8];
 
+const p = binary(a, 0, 7, 4);
 
-const generateJwt= async (key, dat, op) => {
-
-    return new Promise ((resolve, reject) => {
-        jwt.sign(dat, key, op, (err, token) => {
-            if (err) reject(err);
-            resolve(token);
-        });
-    })
-
-    
-
-}
-
-generateJwt(secret, data, options).then((token) => {
-    console.log(token);
-})
+console.log(p);

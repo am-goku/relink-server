@@ -22,11 +22,11 @@ export const adminLogin = (data) => {
         bcrypt.compare(data.password, admin.password)
       ) {
         generateJwt(admin)
-          .then((adminToken) => {
+          .then((adminTokens) => {
             resolve({
               status: 200,
               message: "Admin login successful",
-              adminToken,
+              adminTokens,
               admin,
               valid: true
             });
