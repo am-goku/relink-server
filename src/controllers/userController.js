@@ -1,8 +1,11 @@
 //importing Helpers
 import {
+  OauthLoginHelper,
   fetchUserById,
   followHelper,
   getConnectonHelper,
+  getUserWithEmail,
+  regOauthHelper,
   registerFcmHelper,
   registration,
   removeFcmToken,
@@ -31,10 +34,26 @@ export const login = (req, res, next) => {
     userLogin(userData).then((data) => {
       res.status(200).json(data);
     }).catch((err) => {
-      console.log("Error while getting userLogin", err);
+      res.status(500).send(err);
     })
   } catch (error) {
-    console.log("Error while login", error);
+    res.status(500).send(error);
+  }
+}
+
+// @desc    Login google user
+// @route   POST /user/login/Oauth
+// @access  Public
+export const OauthLogin = (req, res, next) => {
+  try {
+    const userData = req.body;
+    OauthLoginHelper(userData).then((response) => {
+      res.status(200).json(response);
+    }).catch((err)=> {
+      res.status(500).send(err)
+    })
+  } catch (error) {
+    res.status(500).send(error)
   }
 }
 
@@ -49,12 +68,28 @@ export const registerUser = (req, res) => {
         res.status(200).json({...response})
       })
       .catch((err) => {
-        console.log("error in registerUser", err);
+        res.status(500).send(err);
       });
   } catch (error) {
-    console.log("Error in registerUser (userController)", error);
+    res.status(500).send(error);
   }
 };
+
+// @desc    Register google user
+// @route   POST /user/register/Oauth
+// @access  Public
+export const regOauthUser = (req, res) => {
+  try {
+    const userData = req.body;
+    regOauthHelper(userData).then((response) => {
+      res.status(200).json(response);
+    }).catch((err) => {
+      res.status(500).send(err);
+    })
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
 
 
 
@@ -76,6 +111,22 @@ export const fetch_Users = (req, res) => {
     res.status(500).json(err);
   }
 };
+
+// @desc    Get users with email
+// @route   GET /user/fetch-user/email/:email
+// @access  Public
+export const fetchUserByEmail = (req, res) => {
+  try {
+    const email = req.params.email;
+    getUserWithEmail(email).then((response)=> {
+      res.status(200).send(response);
+    }).catch((error) => {
+      res.status(200).send(error)
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+}
 
 // @desc    Search user
 // @route   GET /user/search/:Key

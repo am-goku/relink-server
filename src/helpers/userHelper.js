@@ -46,20 +46,22 @@ export const userLogin = ({ username, email, password }) => {
                       })
                       .catch((error) => {
                         console.log("Error in generating token: ", error);
+                        throw new Error(`${error}`);
                       });
                   } else {
                     resolve({
-                      status: 401,
+                      status: 403,
                       message:
                         "Sorry, Your account has been temporarily blocked.",
                     });
                   }
                 } else {
-                  resolve({ status: 401, message: "Wrong password" });
+                  resolve({ status: 403, message: "Wrong password" });
                 }
               })
               .catch((error) => {
                 console.log("Error in comparing password", error);
+                throw new Error(`${error}`);
               });
           } else {
             throw new Error("user not found");
@@ -67,29 +69,76 @@ export const userLogin = ({ username, email, password }) => {
         })
         .catch((error) => {
           console.log("Error in fetching user while login", error);
-          resolve({ status: 422, message: "Account does not exist" });
+          reject({ status: 422, message: "Account does not exist", err });
         });
     });
   } catch (error) {
     console.log("error in login", error);
+    reject({
+      error_code: "INTERNAL_SERVER_ERROR",
+      message: "Somethings wrong try after sometimes",
+      status: 500,
+    });
   }
 };
+
+// @desc    Login google user
+// @route   POST /user/login/Oauth
+// @access  Public
+export const OauthLoginHelper = (userData) => {
+  return new Promise((resolve, reject) => {
+    User.findOne({email: userData.email}).select("-password").then(async (user) => {
+      if(user){
+        if(!user?.blocked){
+          const tokens = await generateJwt(user);
+          resolve({
+            status: 200,
+            message: "Login successful",
+            tokens,
+            user,
+            isValid: true,
+          });
+        } else {
+          reject({
+            status: 403,
+            error_code: "FORBIDDEN_USER",
+            message: "Blocked user"
+          })
+        }
+      } else {
+        //new user
+        reject({
+          status: 404,
+          error_code: "USER_NOT_FOUND",
+          message: "User not found",
+        });
+      }
+    }).catch((err)=> {
+      reject({
+        status: 500,
+        error_code: "DB_FETCH_ERROR",
+        message: "Error fetching user.",
+        err
+      })
+    })
+  })
+}
 
 // @desc    Register user
 // @route   POST /users/register
 // @access  Public
 export const registration = ({ username, email, password }) => {
-  try {
-    return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    try {
       if (await User.findOne({ email: email })) {
-        resolve({
+        reject({
           status: 409,
           error_code: "USER_ALREADY_REGISTERED",
           message: "Email has already been registered",
         });
       }
       if (await User.findOne({ username: username })) {
-        resolve({
+        reject({
           status: 409,
           error_code: "USERNAME_TAKEN",
           message: "Username already in use",
@@ -116,29 +165,87 @@ export const registration = ({ username, email, password }) => {
               });
             })
             .catch((error) => {
-              resolve({
+              reject({
                 error_code: "DB_SAVE_ERROR",
                 message: "omethings wrong try after sometimes",
                 status: 500,
               });
-              console.log("error saving new user: " + error);
             });
         })
         .catch((error) => {
-          resolve({
+          reject({
             error_code: "PSW_HASHING_ERROR",
             message: "Somethings wrong try after sometimes",
             status: 500,
           });
-          console.log("error hashing password: " + error);
         });
-    });
-  } catch (error) {
-    console.log("Error in registration(userHelper): " + error);
-  }
+    } catch (error) {
+      reject({
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Somethings wrong try after sometimes",
+        status: 500,
+      });
+      console.log("Error in registration(userHelper): " + error);
+    }
+  });
 };
 
+// @desc    Register google user
+// @route   POST /user/register/Oauth
+// @access  Public
+export const regOauthHelper = (userData) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (await User.findOne({ email: userData.email })) {
+        reject({
+          status: 409,
+          error_code: "USER_ALREADY_REGISTERED",
+          message: "Email has already been registered",
+        });
+      }
+      if (await User.findOne({ username: userData.username })) {
+        reject({
+          status: 409,
+          error_code: "USERNAME_TAKEN",
+          message: "Username already in use",
+        });
+      }
 
+      const newUser = new User({
+        email: userData?.email,
+        username: userData?.username,
+        name: userData?.name,
+        profilePic: userData?.image,
+      });
+
+      newUser
+        .save()
+        .then(async (user) => {
+          const tokens = await generateJwt(user);
+          resolve({
+            tokens,
+            user,
+            isValid: true,
+            status: 200,
+            message: "Login successful",
+          });
+        })
+        .catch((err) => {
+          reject({
+            error_code: "DB_SAVE_ERROR",
+            message: "Somethings wrong try after sometimes",
+            status: 500,
+          });
+        });
+    } catch (error) {
+      reject({
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Somethings wrong try after sometimes",
+        status: 500,
+      });
+    }
+  });
+};
 
 ////////////////////////////////////////////////// USER FETCH //////////////////////////////////////////////////////////////////
 // @desc    Get users
@@ -166,7 +273,18 @@ export const fetchUserById = (userId) => {
   });
 };
 
-
+// @desc    Get users with email
+// @route   GET /user/fetch-user/email/:email
+// @access  Public
+export const getUserWithEmail = (email) => {
+  return new Promise((resolve, reject) => {
+    User.findOne({email: email}).select("-password").then((user) => {
+      resolve(user);
+    }).catch((error) => {
+      reject(error);
+    })
+  })
+}
 
 ////////////////////////////////////////////////// EMAIL VARIFICATION //////////////////////////////////////////////////////////////////
 // @desc    Sent verification link

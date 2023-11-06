@@ -1,21 +1,37 @@
-const binary = (a, low,  high, item) => {
-    const mid = Math.floor((low+high) / 2);
-        if(low <= mid && high >= mid){
-            if (a[mid] === item) {
-              return mid;
-            } else if (a[mid] > item) {
-              return binary(a, low, mid-1, item);
-            } else if (a[mid] < item) {
-              return binary(a, mid+1, high, item);
-            }
-        } else {
-            return -1
-        }
-};
+
+const shift = (arr, pos) => {
+  
+  let len = arr.length;
+
+  if(pos > len){
+    return 'limit exceeded'
+  }
+  
+
+
+  for(let i=0; i<pos; i++){
+      let j=0;
+
+      const temp = arr[0];
+
+      while(j<len-1){
+          arr[j] = arr[j+1];
+          j++
+      }
+
+      arr[len-1] = temp;
+  }
+
+  return arr;
+
+}
+
 
 
 const a = [1, 2, 3, 4, 5, 6, 7, 8];
+const position = 9
 
-const p = binary(a, 0, 7, 4);
+const result = shift(a, position)
 
-console.log(p);
+
+console.log(result);

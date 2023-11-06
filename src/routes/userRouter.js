@@ -17,11 +17,12 @@ import {
   reportUser,
   registerFcmToken,
   logout,
+  OauthLogin,
+  regOauthUser,
+  fetchUserByEmail,
 } from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
-import { sendNotification } from "../services/notify.js";
 import { deleteNotification, fetch_notifications } from "../controllers/notificationController.js";
-import { removeFcmToken } from "../helpers/userHelper.js";
 
 
 // @desc    Fetch users
@@ -36,10 +37,21 @@ router.get("/fetch/username/:username", fetchUserByUsername )
 // @access  Public
 router.post("/login", login);
 
+// @desc    Login google user
+// @access  Public
+router.post("/login/Oauth", OauthLogin)
+
 // @desc    Register user
 // @access  Public
 router.post("/register", registerUser);
 
+// @desc    Register google user
+// @access  Public
+router.post('/register/Oauth', regOauthUser);
+
+// @desc    Get users with email
+// @access  Public
+router.get('/fetch-user/email/:email', fetchUserByEmail);
 
 // @desc    Save post
 // @access  Registerd users
