@@ -67,6 +67,34 @@ export const chatRoomHelper = (userIds) => {
     })
 };
 
+// @desc    Get chatRoom of two
+// @route   /messages/inbox/room/fetch/:firstId/:secondId
+// @access  Users - private
+export const getRoomWithIds = (IDs) => {
+  return new Promise((resolve, reject) => {
+    try {
+      IDs.sort();
+      ChatRoom.findOne({users: IDs}).then((room) => {
+        resolve(room);
+      }).catch((err)=> {
+        reject({
+          status: 500,
+          error_code: "DB_FETCH_ERROR",
+          message: "Error getting chat room.",
+          err,
+        });
+      })
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Error getting chat room.",
+        error
+      })
+    }
+  })
+}
+
 // @desc    Send new chat
 // @route   /messages/inbox/new-message/:roomId
 // @access  Users - private
@@ -79,7 +107,10 @@ export const newMessageHelper = (roomId, textMessage, senderId) => {
         textMessage: textMessage
       });
 
-      newMessage.save().then((response)=> {
+      newMessage.save().then(async (response)=> {
+
+        await ChatRoom.findOneAndUpdate({_id: roomId}, {lastMessageTime: response?.createdAt, lastMessage: textMessage});
+
         resolve(response)
       }).catch((err) => {
         reject({
@@ -101,7 +132,7 @@ export const newMessageHelper = (roomId, textMessage, senderId) => {
 export const roomWithUserID = (userId) => {
   return new Promise((resolve, reject) => {
     try {
-      ChatRoom.find({users: userId}).then((rooms) => {
+      ChatRoom.find({users: userId}).sort({lastMessageTime: -1}).then((rooms) => {
         resolve(rooms);
       }).catch((err) => reject(err))
     } catch (error) {

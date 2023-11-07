@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { authAdmin, authUser } from "../controllers/authController";
+import { authAdmin, authUser, changePassword } from "../controllers/authController";
 
 //importing middleware
 import protectAdmin from "../middleware/adminAuth";
@@ -44,6 +44,8 @@ router.post('/verify-otpToken', verifyOTP);
 
 
 
+// change password
+router.get('/change-password/verify/:username/:token', changePassword);
 
 
 

@@ -1,6 +1,7 @@
 //importing Helpers
 import {
   OauthLoginHelper,
+  changePasswordRequestHelper,
   fetchUserById,
   followHelper,
   getConnectonHelper,
@@ -365,5 +366,22 @@ export const logout = (req, res) => {
     })
   } catch (error) {
     res.status(500).send(error);
+  }
+}
+
+
+
+
+/////////////// password management //////////////
+export const requestVerification = (req, res) => {
+  try {
+    const {password, userId} = req.body;
+    changePasswordRequestHelper(userId, password).then((response) => {
+      res.status(200).send(response)
+    }).catch((error) => {
+      res.status(500).send(error)
+    })
+  } catch (error) {
+    res.status(500).send(error)
   }
 }

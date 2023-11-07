@@ -4,7 +4,7 @@ import generateJwt from "../services/jwt.js"; //imporing jwt function to generat
 
 //importing models
 import { User } from "../models/userModel.js"; //userModel
-import { verificationEmail, verifyOtpToken } from "../services/nodemailer.js";
+import { generateTokenForPassword, verificationEmail, verifyOtpToken } from "../services/nodemailer.js";
 import { Post } from "../models/postModel.js";
 import { Connection } from "../models/connectionModel.js";
 import { Report } from "../models/reportsModel.js";
@@ -683,5 +683,30 @@ export const removeFcmToken = (userId) => {
     User.updateOne({_id: userId}, {$unset: {fcmToken: 1}}).then(() => {
       resolve(true);
     }).catch(err => reject(err));
+  })
+}
+
+
+
+
+
+
+/////////////////////////////// password management //////////////////////////////
+
+export const changePasswordRequestHelper = (userId, password) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const user = await User.findOne({_id: userId});
+
+      generateTokenForPassword({email: user.email, password: hashedPassword, username: user.username}).then((res) => {
+        resolve(res);
+      }).catch((err) => {
+        reject(err);
+      })
+    } catch (error) {
+      reject(error);
+    }
   })
 }

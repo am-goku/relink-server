@@ -1,7 +1,7 @@
 
 import crypto from "crypto";
 import { Verify } from "../models/verifyModel";
-import { sentEmail } from "./sentmail";
+import { sentEmail, sentVerificationEmail } from "./sentmail";
 import { url } from "inspector";
 
 
@@ -65,3 +65,36 @@ export const verifyOtpToken = (email, token) => {
     }
   });
 };
+
+
+
+
+
+///////////// password management ///////////////
+
+export const generateTokenForPassword = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = crypto.randomBytes(32).toString('hex');
+      const verify = new Verify({
+        username: data?.username,
+        email: data?.email,
+        token: token,
+        password: data?.password
+      })
+
+      await verify.save();
+
+      const verificationLink = `${process.env.SERVER_BASE}/auth/change-password/verify/${data?.username}/${token}`;
+
+      sentVerificationEmail(data?.email, data?.username, verificationLink).then((response)=> {
+        resolve(response);
+      }).catch((error)=> {
+        reject(error);
+      })
+
+    } catch (error) {
+        reject(error);
+    }
+  })
+}

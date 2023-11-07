@@ -21,6 +21,11 @@ const commentSchema = new Schema({
         maxLength: 500,
     },
 
+    parentId: {
+        type: mongoose.Types.ObjectId,
+        ref: "comment"
+    },
+
     deleted: {
         type: Boolean,
         default: false

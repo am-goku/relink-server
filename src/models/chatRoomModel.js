@@ -14,7 +14,12 @@ const chatRoomSchema = new Schema({
     theme: {
         type: String,
     },
-    background: {}
+    lastMessage: {
+        type: String,
+    },
+    lastMessageTime: {
+        type: String
+    }
 }, {
     timestamps: true,
 })

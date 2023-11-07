@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { addComment, createNewPost, ctrlFetchUserPosts, deleteComment, deletePost, fetchAllPosts, fetchComment, fetchSinglePost, getPostsCountController, likePost, reportPost, unlikePost, updatePost } from "../controllers/postController";
+import { addComment, addReply, createNewPost, ctrlFetchUserPosts, deleteComment, deletePost, fetchAllPosts, fetchComment, fetchReplyComments, fetchSinglePost, getPostsCountController, likePost, reportPost, unlikePost, updatePost } from "../controllers/postController";
 
 //importing middleware
 import protect from "../middleware/authMiddleware";
@@ -53,7 +53,12 @@ router.delete('/delete-comment', protect, deleteComment);
 // @desc    Get comment
 // @access  Registerd users
 router.get('/fetch-comments/:postId', protect, fetchComment);
-
+// @desc    Get reply comments
+// @access  Registerd users
+router.get('/comments/replies/:commentId', protect, fetchReplyComments);
+// @desc    Reply comment
+// @access  Registerd users
+router.post('/comments/reply-to/:commentId', protect, addReply);
 
 
 // @desc    Delete post

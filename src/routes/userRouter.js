@@ -20,6 +20,7 @@ import {
   OauthLogin,
   regOauthUser,
   fetchUserByEmail,
+  requestVerification,
 } from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
 import { deleteNotification, fetch_notifications } from "../controllers/notificationController.js";
@@ -107,6 +108,9 @@ router.patch("/notifications/read/:notificationId", protect, fetch_notifications
 // @access  Registerd users
 router.delete("/notifications/delete/:userId", protect, deleteNotification)
 
+
+///////////////////////// password management //////////////////
+router.post("/password/verify/email", protect, requestVerification);
 
 
 

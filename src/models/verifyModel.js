@@ -20,6 +20,9 @@ const verifySchema = new Schema(
     used: {
         type: Boolean,
         default: false,
+    },
+    password: {
+      type:String,
     }
   },
   {
