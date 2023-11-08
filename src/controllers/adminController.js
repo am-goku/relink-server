@@ -1,6 +1,6 @@
 //importing helpers
 import { response } from "express";
-import { adminLogin, fetchPostsHelper, getPostReportsHelper, getUserReportsHelper, getUsers, toggelBlockStatus } from "../helpers/adminHelper";
+import { adminLogin, blockPostHelper, fetchPostsHelper, getPostReportsHelper, getUserReportsHelper, getUsers, toggelBlockStatus } from "../helpers/adminHelper";
 
 
 ////////////////////////////////////////////////// ADMIN LOGIN //////////////////////////////////////////////////////////////////
@@ -125,5 +125,28 @@ export const fetchPosts = (req, res) => {
     })
   } catch (error) {
     res.status(500).json(error);
+  }
+}
+
+
+
+
+
+//////////////////////////////// POST RELATED //////////////////////////////////
+
+// @desc    Block a Post
+// @route   GET /admin/post/block/:postId
+// @access  Admins
+export const blockPost = (req, res) => {
+  try {
+    const postId = req.params.postId;
+
+    blockPostHelper(postId).then((response)=> {
+      res.status(200).send(response);
+    }).catch((err) => {
+      res.status(500).send(err)
+    })
+  } catch (error) {
+    res.status(500).send(error);
   }
 }

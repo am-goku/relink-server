@@ -6,6 +6,7 @@ import { Admin } from "../models/adminModel";
 import { User } from "../models/userModel";
 import { Post } from "../models/postModel";
 import { Report } from "../models/reportsModel";
+import { response } from "express";
 
 
 
@@ -150,9 +151,10 @@ export const getUserReportsHelper = (page, perPage, search) => {
   return new Promise((resolve, reject) => {
     try {
       const regex = search ? new RegExp(search, "i") : /.*/;
-      Report.find({ reporterUsername: regex })
+      Report.find({ reporterUsername: regex, reportType: "UserReport" })
         .skip((page - 1) * perPage)
         .limit(perPage).then((reports) => {
+          console.log(reports);
           resolve(reports);
         }).catch((err) =>{
           reject({
@@ -180,7 +182,7 @@ export const getPostReportsHelper = (page, perPage, search) => {
   return new Promise((resolve, reject) => {
     try {
       const regex = search ? new RegExp(search, "i") : /.*/;
-      Report.find({ reporterUsername: regex })
+      Report.find({ reporterUsername: regex, reportType: "PostReport" })
         .skip((page - 1) * perPage)
         .limit(perPage).then((reports) => {
           resolve(reports);
@@ -250,3 +252,34 @@ export const fetchPostsHelper = (page, perPage, search) => {
     }
   })
 }
+
+
+
+
+
+
+
+
+//////////////////////////////// POST RELATED //////////////////////////////////
+
+// @desc    Block a Post
+// @route   GET /admin/post/block/:postId
+// @access  Admins
+export const blockPostHelper = (postId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Post.findOneAndUpdate({_id:postId}, {adminBlock: true}).then((response)=> {
+        resolve(response);
+      }).catch((err) => {
+        reject(err);
+      })
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+
+
+
+

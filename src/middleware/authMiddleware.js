@@ -51,18 +51,18 @@ const protect = async (req, res, next) => {
               next();
             } else {
               // User has been blocked
-              res.status(401).json({
+              res.status(403).json({
                 message: "User has been blocked",
-                status: 401,
+                status: 403,
                 error_code: "BLOCKED_USER",
               });
             }
           } else {
             // User not found
-            res.status(401).json({
-              message: "User not authorized",
-              status: 401,
-              error_code: "AUTHENTICATION_FAILED",
+            res.status(404).json({
+              message: "User not found",
+              status: 404,
+              error_code: "NOT_FOUND",
             });
           }
         })

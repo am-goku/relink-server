@@ -54,6 +54,11 @@ const postSchema = new Schema({
     default: false,
   },
 
+  adminBlock: {
+    type: Boolean,
+    default: false,
+  },
+
   deleted: {
     type: Boolean,
     default: false,

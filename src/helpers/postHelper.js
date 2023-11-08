@@ -358,7 +358,7 @@ export const reportPostHelper = (userId, username, targetId, details) => {
         reporterId: userId,
         targetId: targetId,
         details: details,
-        reportType: "UserReport",
+        reportType: "PostReport",
         reporterUsername: username
       });
 

@@ -49,14 +49,14 @@ export const userLogin = ({ username, email, password }) => {
                         throw new Error(`${error}`);
                       });
                   } else {
-                    resolve({
+                    reject({
                       status: 403,
                       message:
                         "Sorry, Your account has been temporarily blocked.",
                     });
                   }
                 } else {
-                  resolve({ status: 403, message: "Wrong password" });
+                  reject({ status: 403, message: "Wrong password" });
                 }
               })
               .catch((error) => {

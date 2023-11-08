@@ -25,6 +25,18 @@ const socketIo_Config = (io) => {
             })
 
 
+            // socket.on("roomSetup", (userId)=> {
+            //     socket.join(userId);
+            //     console.log("socket connection established for setting up rooms");
+
+            //     socket.on("newMessageUpdate", (newChat, cb)=> {
+            //         io.to(userId).emit("updateChatRooms", newChat)
+            //     });
+
+
+            // })
+
+
             
 
 
