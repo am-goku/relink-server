@@ -25,13 +25,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "https://reslink.thetrendly.shop",
-      "http://relink.thetrendly.shop",
-      "http://www.relink.thetrendly.shop",
-      "http://www.relink.thetrendly.shop",
-    ],
+    origin: "*",
     method: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   },
 });
@@ -47,13 +41,7 @@ cloudinaryConfig();
 
 //settingup corse options
 const corsOption = {
-    origin: [
-      "http://localhost:3000",
-      "https://reslink.thetrendly.shop",
-      "http://relink.thetrendly.shop",
-      "http://www.relink.thetrendly.shop",
-      "http://www.relink.thetrendly.shop",
-    ],
+    origin: "*",
 }
 //middlewares
 app.use(express.json());
