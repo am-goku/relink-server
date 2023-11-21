@@ -19,15 +19,20 @@ import postRouter from './src/routes/postRouter.js';
 import authRouter from './src/routes/authRouter.js';
 import messageRouter from "./src/routes/messageRouter.js";
 import socketIo_Config from './src/services/socketIo.js';
-import { messaging } from './src/utils/firebaseInit.js';
 
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    method: ["GET", "POST", "PUT", "PATCH"],
+    origin: [
+      "http://localhost:3000",
+      "https://reslink.thetrendly.shop",
+      "http://relink.thetrendly.shop",
+      "http://www.relink.thetrendly.shop",
+      "http://www.relink.thetrendly.shop",
+    ],
+    method: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   },
 });
 
@@ -42,7 +47,13 @@ cloudinaryConfig();
 
 //settingup corse options
 const corsOption = {
-    origin: '*',
+    origin: [
+      "http://localhost:3000",
+      "https://reslink.thetrendly.shop",
+      "http://relink.thetrendly.shop",
+      "http://www.relink.thetrendly.shop",
+      "http://www.relink.thetrendly.shop",
+    ],
 }
 //middlewares
 app.use(express.json());
