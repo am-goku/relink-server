@@ -25,7 +25,7 @@ const reportSchema = new Schema({
 
     details: {
         type: String,
-        require: true
+        // require: true
     },
 
     actionTaken: {
