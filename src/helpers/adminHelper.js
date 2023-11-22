@@ -1,4 +1,4 @@
-import generateJwt from "../services/jwt"; //importing function to generate JWT Token
+import generateJwt from "../services/jwt.js"; //importing function to generate JWT Token
 import bcrypt from "bcrypt";  //importing bcrypt
 
 //importing models
