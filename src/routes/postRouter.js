@@ -2,10 +2,26 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { addComment, addReply, createNewPost, ctrlFetchUserPosts, deleteComment, deletePost, fetchAllPosts, fetchComment, fetchReplyComments, fetchSinglePost, getPostsCountController, likePost, reportPost, unlikePost, updatePost } from "../controllers/postController";
+import {
+  addComment,
+  addReply,
+  createNewPost,
+  ctrlFetchUserPosts,
+  deleteComment,
+  deletePost,
+  fetchAllPosts,
+  fetchComment,
+  fetchReplyComments,
+  fetchSinglePost,
+  getPostsCountController,
+  likePost,
+  reportPost,
+  unlikePost,
+  updatePost,
+} from "../controllers/postController.js";
 
 //importing middleware
-import protect from "../middleware/authMiddleware";
+import protect from "../middleware/authMiddleware.js";
 
 
 

@@ -1,6 +1,5 @@
-import { response } from "express";
-import { ChatRoom } from "../models/chatRoomModel";
-import { Messages } from "../models/messageModel"
+import { ChatRoom } from "../models/chatRoomModel.js";
+import { Messages } from "../models/messageModel.js"
 
 
 

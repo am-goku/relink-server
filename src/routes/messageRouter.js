@@ -1,6 +1,12 @@
 import { Router } from "express";
-import protect from "../middleware/authMiddleware";
-import { getChatRoomWithIds, getChats, getRoomwithUserID, sendNewMessage, setChatRoom } from "../controllers/chatController";
+import protect from "../middleware/authMiddleware.js";
+import {
+  getChatRoomWithIds,
+  getChats,
+  getRoomwithUserID,
+  sendNewMessage,
+  setChatRoom,
+} from "../controllers/chatController.js";
 const router = Router();
 
 

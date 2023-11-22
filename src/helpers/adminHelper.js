@@ -2,11 +2,10 @@ import generateJwt from "../services/jwt"; //importing function to generate JWT 
 import bcrypt from "bcrypt";  //importing bcrypt
 
 //importing models
-import { Admin } from "../models/adminModel";
-import { User } from "../models/userModel";
-import { Post } from "../models/postModel";
-import { Report } from "../models/reportsModel";
-import { response } from "express";
+import { Admin } from "../models/adminModel.js";
+import { User } from "../models/userModel.js";
+import { Post } from "../models/postModel.js";
+import { Report } from "../models/reportsModel.js";
 
 
 

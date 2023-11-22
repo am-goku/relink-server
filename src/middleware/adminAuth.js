@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"; //importing jwt from jsonwebtoken
 
 //importing models
-import { Admin } from "../models/adminModel";
+import { Admin } from "../models/adminModel.js";
 
 
 

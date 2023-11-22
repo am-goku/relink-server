@@ -1,8 +1,7 @@
-import { Notifications } from "../models/notificationModel"
-import { sendNotification } from "../services/notify";
-import { fetchAPost } from "./postHelper";
-import { fetchUserById } from "./userHelper"
-import { ObjectId } from "mongoose";
+import { Notifications } from "../models/notificationModel.js"
+import { sendNotification } from "../services/notify.js";
+import { fetchAPost } from "./postHelper.js";
+import { fetchUserById } from "./userHelper.js"
 
 
 // when a user likes a post \\

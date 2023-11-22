@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"; //importing jwt from jsonwebtoken
 
 //importing models
-import { User } from "../models/userModel";
+import { User } from "../models/userModel.js";
 
 
 // @desc    To et user from decoded token

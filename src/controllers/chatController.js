@@ -1,6 +1,10 @@
-
-
-import { chatRoomHelper, getChatHelper, getRoomWithIds, newMessageHelper, roomWithUserID } from "../helpers/chatHelper"
+import {
+  chatRoomHelper,
+  getChatHelper,
+  getRoomWithIds,
+  newMessageHelper,
+  roomWithUserID,
+} from "../helpers/chatHelper.js";
 
 
 

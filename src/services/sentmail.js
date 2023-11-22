@@ -1,5 +1,8 @@
 import nodemailer, { createTransport } from "nodemailer";
 
+
+
+
 export const sentEmail = async (email, username, token) => {
   return new Promise(async (resolve, reject) => {
     try {

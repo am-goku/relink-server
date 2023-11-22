@@ -1,10 +1,5 @@
-import { User } from "../models/userModel"
-import { Verify } from "../models/verifyModel"
-
-
-
-
-
+import { User } from "../models/userModel.js"
+import { Verify } from "../models/verifyModel.js"
 
 
 

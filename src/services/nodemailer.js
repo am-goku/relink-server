@@ -1,7 +1,7 @@
 
 import crypto from "crypto";
-import { Verify } from "../models/verifyModel";
-import { sentEmail, sentVerificationEmail } from "./sentmail";
+import { Verify } from "../models/verifyModel.js";
+import { sentEmail, sentVerificationEmail } from "./sentmail.js";
 import { url } from "inspector";
 
 

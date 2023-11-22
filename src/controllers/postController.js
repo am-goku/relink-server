@@ -1,6 +1,23 @@
 //importing helpers
-import { response } from "express";
-import { addCommentHelper, createPost, deleteCommentHelper, deletePostHelper, fetchAPost, fetchCommentHelper, fetchUserPosts, getAllPosts, getPostsCount, getReplyComments, likePostHelper, replyToComment, reportPostHelper, unlikePostHelper, updatePostHelper } from "../helpers/postHelper";
+import {
+  addCommentHelper,
+  createPost,
+  deleteCommentHelper,
+  deletePostHelper,
+  fetchAPost,
+  fetchCommentHelper,
+  fetchUserPosts,
+  getAllPosts,
+  getPostsCount,
+  getReplyComments,
+  likePostHelper,
+  replyToComment,
+  reportPostHelper,
+  unlikePostHelper,
+  updatePostHelper,
+} from "../helpers/postHelper.js";
+
+
 
 // @desc    Create new post
 // @route   POST /post/create-post

@@ -1,8 +1,6 @@
-// @desc    Returns user
-// @route   GET /auth/user
+import { changePasswordHelper } from "../helpers/authHelper.js";
 
-import { response } from "express";
-import { changePasswordHelper } from "../helpers/authHelper";
+
 
 // @access  Private
 export const authUser = (req, res) => {

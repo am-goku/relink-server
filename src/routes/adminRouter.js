@@ -2,10 +2,18 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { adminPostLogin, blockPost, changeStatus, fetchPosts, fetchUsers, getPostReports, getUserReports } from "../controllers/adminController";
+import {
+  adminPostLogin,
+  blockPost,
+  changeStatus,
+  fetchPosts,
+  fetchUsers,
+  getPostReports,
+  getUserReports,
+} from "../controllers/adminController.js";
 
 //importing middleware
-import protectAdmin from "../middleware/adminAuth";
+import protectAdmin from "../middleware/adminAuth.js";
 
 
 

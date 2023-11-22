@@ -1,5 +1,5 @@
-import { fetchUserById } from "../helpers/userHelper";
-import { messaging } from "../utils/firebaseInit";
+import { fetchUserById } from "../helpers/userHelper.js";
+import { messaging } from "../utils/firebaseInit.js";
 
 // Send a message to the devices corresponding to the provided
 // registration tokens.

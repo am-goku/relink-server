@@ -2,12 +2,12 @@ import { Router } from "express";
 const router = Router();
 
 //importing controllers
-import { authAdmin, authUser, changePassword } from "../controllers/authController";
+import { authAdmin, authUser, changePassword } from "../controllers/authController.js";
 
 //importing middleware
-import protectAdmin, { refreshAdminAccessToken } from "../middleware/adminAuth";
-import protect, { refreshAccessToken } from "../middleware/authMiddleware";
-import { sentVerificationEmail, verifyOTP } from "../controllers/userController";
+import protectAdmin, { refreshAdminAccessToken } from "../middleware/adminAuth.js";
+import protect, { refreshAccessToken } from "../middleware/authMiddleware.js";
+import { sentVerificationEmail, verifyOTP } from "../controllers/userController.js";
 
 
 // @desc    User authentication
