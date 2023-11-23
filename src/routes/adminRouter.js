@@ -14,6 +14,7 @@ import {
 
 //importing middleware
 import protectAdmin from "../middleware/adminAuth.js";
+import { fetchSinglePost } from "../controllers/postController.js";
 
 
 
@@ -45,6 +46,9 @@ router.get("/reports/posts", protectAdmin , getPostReports)
 // @desc    Fetch posts with pagination and populated user
 // @access  Admins
 router.get('/fetch-posts', protectAdmin, fetchPosts);
+
+
+router.get("/fetch-single-post/:postId", protectAdmin, fetchSinglePost);
 
 // @desc    Block a Post
 // @access  Admins
