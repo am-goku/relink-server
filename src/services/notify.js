@@ -10,7 +10,7 @@ export const sendNotification = (userId, message, misc = {}) => {
 
       const token = user[0].fcmToken;
 
-      console.log(message);
+      console.log("message",{...message});
 
       const newData = JSON.stringify(message);
 

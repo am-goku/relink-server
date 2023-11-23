@@ -67,7 +67,7 @@ export const userLogin = ({ username, email, password }) => {
         })
         .catch((error) => {
           console.log("Error in fetching user while login", error);
-          reject({ status: 422, message: "Account does not exist", err });
+          reject({ status: 422, message: "Account does not exist", error });
         });
     });
   } catch (error) {

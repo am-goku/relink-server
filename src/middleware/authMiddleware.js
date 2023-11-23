@@ -54,7 +54,7 @@ const protect = async (req, res, next) => {
               res.status(403).json({
                 message: "User has been blocked",
                 status: 403,
-                error_code: "BLOCKED_USER",
+                error_code: "FORBIDDEN",
               });
             }
           } else {

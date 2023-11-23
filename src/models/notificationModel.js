@@ -17,6 +17,10 @@ const notificationSchema = new Schema({
         ref: "user",
     },
 
+    fromUser: {
+        type: String
+    },
+
     message: {
         type: String,
         required: true,

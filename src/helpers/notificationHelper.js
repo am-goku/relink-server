@@ -23,6 +23,7 @@ export const notifyLike = (post, fromId) => {
               from: fromId,
               postId: post?._id,
               message: `liked your post.`,
+              fromUser: likedUser[0]?.username
             });
 
             newNotification
@@ -53,10 +54,11 @@ export const notifyFollow = (userId, fromId) => {
         userId: userId,
         from: fromId,
         message: `started following you.`,
+        fromUser: followedUser[0].username,
       });
 
       newNotification
-        .save()
+        .save({new: true})
         .then((response) => {
           sendNotification(userId, response);
           resolve(response);
