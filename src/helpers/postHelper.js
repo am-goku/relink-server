@@ -146,7 +146,7 @@ export const updatePostHelper = (postId, caption) => {
 export const fetchUserPosts = (userId) => {
   return new Promise ((resolve, reject) => {
     try {
-      Post.find({userId: userId}).lean().then((posts)=> {
+      Post.find({userId: userId}).sort({createdAt: -1}).lean().then((posts)=> {
         resolve(posts);
       }).catch((err) => {
         reject(err);
