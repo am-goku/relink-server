@@ -1,4 +1,5 @@
 import { fetchUserById } from "../helpers/userHelper.js";
+import { User } from "../models/userModel.js";
 import { messaging } from "../utils/firebaseInit.js";
 
 // Send a message to the devices corresponding to the provided
@@ -38,3 +39,30 @@ export const sendNotification = (userId, message, misc = {}) => {
     }
   });
 };
+
+
+
+
+
+export const sendMessageNotification = (senderId, roomId, message) => {
+  return new Promise(async (resolve, reject) => {
+    const sender = await User.findOne({_id: senderId});
+
+    const newMessage = `${sender?.username}: ${message}`;
+
+    let recieverId;
+
+    if(roomId[0] !== senderId){
+      recieverId = roomId[0];
+    } else {
+      recieverId = roomId[1];
+    }
+
+    sendNotification(recieverId, newMessage);
+
+    resolve(true)
+  })
+}
+
+
+

@@ -11,6 +11,8 @@ import http from 'http';
 import {connect} from './src/config/mongoose.js';
 import cloudinaryConfig from './src/services/cloudinary.js';
 
+import "./src/utils/scheduledTask.js"
+
 
 //importing the routes location
 import adminRouter from './src/routes/adminRouter.js';
@@ -19,7 +21,6 @@ import postRouter from './src/routes/postRouter.js';
 import authRouter from './src/routes/authRouter.js';
 import messageRouter from "./src/routes/messageRouter.js";
 import socketIo_Config from './src/services/socketIo.js';
-
 
 const app = express();
 const server = http.createServer(app);
@@ -38,6 +39,7 @@ connect();
 
 //cloudinary configuration
 cloudinaryConfig();
+
 
 //settingup corse options
 const corsOption = {

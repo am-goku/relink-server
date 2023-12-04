@@ -21,6 +21,7 @@ import {
   regOauthUser,
   fetchUserByEmail,
   requestVerification,
+  fetchRandomUsers,
 } from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
 import { deleteNotification, fetch_notifications } from "../controllers/notificationController.js";
@@ -112,6 +113,8 @@ router.delete("/notifications/delete/:userId", protect, deleteNotification)
 ///////////////////////// password management //////////////////
 router.post("/password/verify/email", protect, requestVerification);
 
+
+router.get("/fetch-suggested-users/:userId", protect, fetchRandomUsers)
 
 
 // @desc    Logout user

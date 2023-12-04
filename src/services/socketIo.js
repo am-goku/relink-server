@@ -1,3 +1,5 @@
+import { sendMessageNotification } from "./notify.js";
+
 const socketIo_Config = (io) => {
 
     try {
@@ -13,10 +15,19 @@ const socketIo_Config = (io) => {
 
                 socket.on("sendMessage", (roomId, message, senderId, cb)=> {
                     console.log("newMessage from socket",roomId,message, senderId);
+                    // await sendMessageNotification(senderId, roomId, message)
+                        console.log('yoooooo');
                     cb(message);
+
+                    
 
                     io.to(roomId).emit("recieveMessage", message);
                 })
+
+                // socket.on("typing", (typing, senderId, cb)=> {
+
+                //     io.to(roomId).emit("userTyping", {typing, senderId})
+                // })
 
             })
 

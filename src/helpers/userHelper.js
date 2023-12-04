@@ -658,7 +658,7 @@ export const registerFcmHelper = (userId, fcmToken) => {
     )
       .then((res) => {
         console.log("final updates", res);
-        User.findOneAndUpdate({ _id: userId }, { fcmToken: fcmToken })
+        User.findOneAndUpdate({ _id: userId }, { fcmToken: fcmToken, online: true })
           .then((response) => {
             resolve(response);
           })
@@ -706,5 +706,42 @@ export const changePasswordRequestHelper = (userId, password) => {
     } catch (error) {
       reject(error);
     }
+  })
+}
+
+
+
+
+export const fetchRandomHelper = (userId) => {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      //fetching user connections
+      const userConnections = await getConnectonHelper(userId);
+
+      const randomUsers = await User.aggregate([
+        { $match: { _id: { $nin: [...userConnections?.following, userId] } } }, // Exclude specified user IDs
+        { $sample: { size: 5 } },
+      ]);
+
+
+      const resultUser = [];
+
+      randomUsers.forEach((user) => {
+        const data = {
+          name: user.name,
+          username: user.username,
+          profilePic: user.profilePic,
+        };
+        resultUser.push(data);
+      });
+
+      resolve(resultUser);
+    } catch (error) {
+      reject(error);
+    }
+
+  }).catch((err) => {
+    console.log(err);
   })
 }

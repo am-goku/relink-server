@@ -2,6 +2,7 @@
 import {
   OauthLoginHelper,
   changePasswordRequestHelper,
+  fetchRandomHelper,
   fetchUserById,
   followHelper,
   getConnectonHelper,
@@ -375,6 +376,23 @@ export const requestVerification = (req, res) => {
   try {
     const {password, userId} = req.body;
     changePasswordRequestHelper(userId, password).then((response) => {
+      res.status(200).send(response)
+    }).catch((error) => {
+      res.status(500).send(error)
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+}
+
+
+
+
+
+export const fetchRandomUsers = (req, res) => {
+  try {
+    const {userId} = req.params;
+    fetchRandomHelper(userId).then((response) => {
       res.status(200).send(response)
     }).catch((error) => {
       res.status(500).send(error)
