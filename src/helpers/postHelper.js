@@ -382,3 +382,41 @@ export const reportPostHelper = (userId, username, targetId, details) => {
     }
   })
 }
+
+
+
+
+
+export const getEveryPost = (page) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Post.find({ blocked: false })
+        .skip((page - 1) * 20)
+        .limit(20)
+        .sort({ createdAt: -1 })
+        .exec()
+        .then((posts) => {
+          if (posts) {
+            resolve(posts);
+          } else {
+            throw new Error("No posts found");
+          }
+        })
+        .catch((err) => {
+          reject({
+            status: 500,
+            error_code: "DB_FETCH_ERROR",
+            message: "Somethings wrong, Please try again later.",
+            error_message: err.message,
+          });
+        });
+    } catch (error) {
+      reject({
+        status: 500,
+        error_code: "INTERNAL_SERVER_ERROR",
+        message: "Somethings wrong, Please try again later.",
+        error_message: error.message,
+      });
+    }
+  });
+}

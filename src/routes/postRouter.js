@@ -13,6 +13,7 @@ import {
   fetchComment,
   fetchReplyComments,
   fetchSinglePost,
+  getEveryPostCtrl,
   getPostsCountController,
   likePost,
   reportPost,
@@ -88,6 +89,8 @@ router.delete('/delete/post/:postId', protect, deletePost)
 router.post("/report/post/:userId/:username", protect, reportPost);
 
 
+
+router.get('/get-every-posts', protect, getEveryPostCtrl)
 
 
 

@@ -8,6 +8,7 @@ import {
   fetchCommentHelper,
   fetchUserPosts,
   getAllPosts,
+  getEveryPost,
   getPostsCount,
   getReplyComments,
   likePostHelper,
@@ -309,4 +310,19 @@ export const reportPost = (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
+}
+
+
+
+export const getEveryPostCtrl = (req, res) => {
+    try {
+        const {page} = req.query || 1
+        getEveryPost(page).then((response) => {
+            res.status(200).send(response);
+        }).catch((error) => {
+            res.status(500).send(error);
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
 }
